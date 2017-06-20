@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml-stylesheet type="text/xsl" href="callbacks.xsl"?>
+
+<plugin name="Image" short-name="IM" author="federico.ferri.it@gmail.com">
+    <description>Plugin for processing images in V-REP</description>
+    <command name="create">
+        <description>Create an image with given size</description>
+        <params>
+            <param name="width" type="int">
+                <description>width</description>
+            </param>
+            <param name="height" type="int">
+                <description>height</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </return>
+    </command>
+    <command name="destroy">
+        <description>Destroy (i.e.: free memory) an image with given handle</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="line">
+        <description>Draw a line segment between (x1,y1) and (x2,y2) points in the image.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="x1" type="int">
+                <description>x coordinate of first point</description>
+            </param>
+            <param name="y1" type="int">
+                <description>y coordinate of first point</description>
+            </param>
+            <param name="x2" type="int">
+                <description>x coordinate of second point</description>
+            </param>
+            <param name="y2" type="int">
+                <description>y coordinate of second point</description>
+            </param>
+            <param name="r" type="int" default="255">
+                <description>red component (0..255)</description>
+            </param>
+            <param name="g" type="int" default="255">
+                <description>green component (0..255)</description>
+            </param>
+            <param name="b" type="int" default="255">
+                <description>blue component (0..255)</description>
+            </param>
+            <param name="thickness" type="int" default="1">
+                <description>line thickness</description>
+            </param>
+            <param name="type" type="int" default="8">
+                <description>type of the line (8 for 8-connected line, 4 for 4-connected line, or 16 for antialiased line)</description>
+            </param>
+            <param name="shift" type="int" default="0">
+                <description>number of fractional bits in the point coordinates</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="write">
+        <description>Write the image with given handle to a file.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="filename" type="string">
+                <description>file name</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+</plugin>
