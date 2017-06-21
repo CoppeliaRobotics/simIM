@@ -3,18 +3,18 @@
 
 <plugin name="Image" short-name="IM" author="federico.ferri.it@gmail.com">
     <description>Plugin for processing images in V-REP</description>
-    <enum name="format" item-prefix="fmt_" base="3600">
-        <item name="rgb8">
-            <description>RGB 8 bit unsigned int channels</description>
+    <enum name="format" item-prefix="fmt" base="3600">
+        <item name="_8UC1">
+            <description>1 channel, 8 bit unsigned int</description>
         </item>
-        <item name="gray8">
-            <description>Grayscale 8 bit unsigned int</description>
+        <item name="_8UC3">
+            <description>3 channels, 8 bit unsigned int</description>
         </item>
-        <item name="rgb32">
-            <description>RGB 32 bit float channels</description>
+        <item name="_32FC1">
+            <description>1 channel, 32 bit float</description>
         </item>
-        <item name="gray32">
-            <description>Grayscale 32 bit float</description>
+        <item name="_32FC3">
+            <description>3 channels, 32 bit float</description>
         </item>
     </enum>
     <command name="create">
@@ -26,7 +26,7 @@
             <param name="height" type="int">
                 <description>height</description>
             </param>
-            <param name="format" type="int" default="sim_im_fmt_rgb8">
+            <param name="format" type="int" default="sim_im_fmt_8UC3">
                 <description>image format (see <enum-ref name="format" />)</description>
             </param>
         </params>
@@ -70,6 +70,124 @@
             </param>
         </params>
         <return>
+        </return>
+    </command>
+    <command name="convert">
+        <description>Convert the image to a different format.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="format" type="int">
+                <description>target image format (see <enum-ref name="format" />)</description>
+            </param>
+            <param name="scale" type="float" default="1.0">
+                <description>scale factor</description>
+            </param>
+            <param name="in_place" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to the converted image</description>
+            </param>
+        </return>
+    </command>
+    <command name="rgb2gray">
+        <description>Convert the specified RGB image to gray.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="in_place" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to the converted image</description>
+            </param>
+        </return>
+    </command>
+    <command name="gray2rgb">
+        <description>Convert the specified grayscale image to RGB.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="in_place" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to the converted image</description>
+            </param>
+        </return>
+    </command>
+    <command name="rgb2hsv">
+        <description>Convert the specified RGB image to HSV.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="in_place" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to the converted image</description>
+            </param>
+        </return>
+    </command>
+    <command name="hsv2rgb">
+        <description>Convert the specified HSV image to RGB.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="in_place" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to the converted image</description>
+            </param>
+        </return>
+    </command>
+    <command name="rgb2hls">
+        <description>Convert the specified RGB image to HLS.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="in_place" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to the converted image</description>
+            </param>
+        </return>
+    </command>
+    <command name="hls2rgb">
+        <description>Convert the specified HLS image to RGB.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="in_place" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to the converted image</description>
+            </param>
         </return>
     </command>
     <enum name="interp" item-prefix="interp_" base="1200">

@@ -82,14 +82,14 @@ int parseFormat(int f, int def)
 {
     switch(f)
     {
-    case sim_im_fmt_rgb8:
-        return CV_8UC3;
-    case sim_im_fmt_gray8:
+    case sim_im_fmt_8UC1:
         return CV_8UC1;
-    case sim_im_fmt_rgb32:
-        return CV_32FC3;
-    case sim_im_fmt_gray32:
+    case sim_im_fmt_8UC3:
+        return CV_8UC3;
+    case sim_im_fmt_32FC1:
         return CV_32FC1;
+    case sim_im_fmt_32FC3:
+        return CV_32FC3;
     }
     return def;
 }
@@ -121,6 +121,70 @@ void write(SScriptCallBack *p, const char *cmd, write_in *in, write_out *out)
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     cv::imwrite(in->filename, img->mat);
+}
+
+void convert(SScriptCallBack *p, const char *cmd, convert_in *in, convert_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    int format = parseFormat(in->format, CV_8UC3);
+    Image *dstImg = in->in_place ? img : new Image(cv::Mat());
+    img->mat.convertTo(dstImg->mat, format, in->scale);
+    out->handle = dstImg->id;
+}
+
+void rgb2gray(SScriptCallBack *p, const char *cmd, rgb2gray_in *in, rgb2gray_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = in->in_place ? img : new Image(cv::Mat());
+    cv::cvtColor(img->mat, dstImg->mat, CV_RGB2GRAY);
+    out->handle = dstImg->id;
+}
+
+void gray2rgb(SScriptCallBack *p, const char *cmd, gray2rgb_in *in, gray2rgb_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = in->in_place ? img : new Image(cv::Mat());
+    cv::cvtColor(img->mat, dstImg->mat, CV_GRAY2RGB);
+    out->handle = dstImg->id;
+}
+
+void rgb2hsv(SScriptCallBack *p, const char *cmd, rgb2hsv_in *in, rgb2hsv_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = in->in_place ? img : new Image(cv::Mat());
+    cv::cvtColor(img->mat, dstImg->mat, CV_RGB2HSV);
+    out->handle = dstImg->id;
+}
+
+void hsv2rgb(SScriptCallBack *p, const char *cmd, hsv2rgb_in *in, hsv2rgb_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = in->in_place ? img : new Image(cv::Mat());
+    cv::cvtColor(img->mat, dstImg->mat, CV_HSV2RGB);
+    out->handle = dstImg->id;
+}
+
+void rgb2hls(SScriptCallBack *p, const char *cmd, rgb2hls_in *in, rgb2hls_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = in->in_place ? img : new Image(cv::Mat());
+    cv::cvtColor(img->mat, dstImg->mat, CV_RGB2HLS);
+    out->handle = dstImg->id;
+}
+
+void hls2rgb(SScriptCallBack *p, const char *cmd, hls2rgb_in *in, hls2rgb_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = in->in_place ? img : new Image(cv::Mat());
+    cv::cvtColor(img->mat, dstImg->mat, CV_HLS2RGB);
+    out->handle = dstImg->id;
 }
 
 int parseInterp(int i, int def)
