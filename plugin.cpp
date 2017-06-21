@@ -340,6 +340,13 @@ void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
     cv::line(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
 }
 
+void rectangle(SScriptCallBack *p, const char *cmd, rectangle_in *in, rectangle_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    cv::rectangle(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+}
+
 int parseDistanceType(int d, int def)
 {
     switch(d)
