@@ -93,7 +93,7 @@
             <param name="scale" type="float" default="1.0">
                 <description>scale factor</description>
             </param>
-            <param name="in_place" type="bool" default="false">
+            <param name="inPlace" type="bool" default="false">
                 <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
@@ -109,7 +109,7 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="in_place" type="bool" default="false">
+            <param name="inPlace" type="bool" default="false">
                 <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
@@ -125,7 +125,7 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="in_place" type="bool" default="false">
+            <param name="inPlace" type="bool" default="false">
                 <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
@@ -141,7 +141,7 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="in_place" type="bool" default="false">
+            <param name="inPlace" type="bool" default="false">
                 <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
@@ -157,7 +157,7 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="in_place" type="bool" default="false">
+            <param name="inPlace" type="bool" default="false">
                 <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
@@ -173,7 +173,7 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="in_place" type="bool" default="false">
+            <param name="inPlace" type="bool" default="false">
                 <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
@@ -189,7 +189,7 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="in_place" type="bool" default="false">
+            <param name="inPlace" type="bool" default="false">
                 <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
@@ -301,6 +301,9 @@
         <params>
             <param name="handle" type="int">
                 <description>handle to image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
             <param name="width" type="int">
                 <description>width of the new image</description>
@@ -809,6 +812,9 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -824,6 +830,9 @@
             </param>
             <param name="handle2" type="int">
                 <description>handle to second image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -841,6 +850,9 @@
             <param name="k" type="table" item-type="float">
                 <description>scalar</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -856,6 +868,9 @@
             </param>
             <param name="handle2" type="int">
                 <description>handle to second image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -873,6 +888,9 @@
             <param name="k" type="table" item-type="float">
                 <description>scalar</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -888,6 +906,9 @@
             </param>
             <param name="handle2" type="int">
                 <description>handle to second image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -905,6 +926,9 @@
             <param name="k" type="table" item-type="float">
                 <description>scalar</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -920,6 +944,9 @@
             </param>
             <param name="handle2" type="int">
                 <description>handle to second image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -937,6 +964,9 @@
             <param name="handle2" type="int">
                 <description>handle to second image</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -952,6 +982,9 @@
             </param>
             <param name="handle" type="int">
                 <description>handle to image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -980,6 +1013,9 @@
             <param name="op" type="int">
                 <description>comparison operator</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -998,6 +1034,9 @@
             </param>
             <param name="op" type="int">
                 <description>comparison operator</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1032,6 +1071,9 @@
             <param name="op" type="int">
                 <description>reduction operation (see <enum-ref name="reduceOp" />)</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1050,6 +1092,9 @@
             </param>
             <param name="ny" type="int">
                 <description>how many times the src is repeated along the vertical axis</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1078,6 +1123,9 @@
             <param name="op" type="int" default="0">
                 <description>a flag to specify how to flip the array (see <enum-ref name="flipOp" />)</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1091,6 +1139,9 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1103,6 +1154,9 @@
         <params>
             <param name="handle" type="int">
                 <description>handle to image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1120,6 +1174,9 @@
             <param name="power" type="float">
                 <description>handle to image</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1132,6 +1189,9 @@
         <params>
             <param name="handle" type="int">
                 <description>handle to image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1158,6 +1218,9 @@
             <param name="gamma" type="float">
                 <description>gamma coefficient</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1176,6 +1239,9 @@
             </param>
             <param name="alpha" type="float">
                 <description>scale coefficient</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1272,6 +1338,9 @@
             <param name="handle2" type="int">
                 <description>handle to second image</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1287,6 +1356,9 @@
             </param>
             <param name="k" type="table" item-type="float">
                 <description>scalar</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1304,6 +1376,9 @@
             <param name="handle2" type="int">
                 <description>handle to second image</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1319,6 +1394,9 @@
             </param>
             <param name="k" type="table" item-type="float">
                 <description>scalar</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1336,6 +1414,9 @@
             <param name="handle2" type="int">
                 <description>handle to second image</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1352,6 +1433,9 @@
             <param name="k" type="table" item-type="float">
                 <description>scalar</description>
             </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
@@ -1364,6 +1448,9 @@
         <params>
             <param name="handle" type="int">
                 <description>handle to image</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1393,6 +1480,9 @@
             </param>
             <param name="maskSize" type="int" default="sim_im_masksize_precise">
                 <description>mask size (see <enum-ref name="masksize" />)</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
