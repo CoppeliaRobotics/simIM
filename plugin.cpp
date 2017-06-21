@@ -361,6 +361,29 @@ void ellipse(SScriptCallBack *p, const char *cmd, ellipse_in *in, ellipse_out *o
     cv::ellipse(img->mat, cv::Point(in->cx, in->cy), cv::Size(in->rx, in->ry), in->angle, in->startAngle, in->endAngle, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
 }
 
+void fillPoly(SScriptCallBack *p, const char *cmd, fillPoly_in *in, fillPoly_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    int sum = 0;
+    for(size_t i = 0; i < in->numPoints.size(); i++) sum += 2 * in->numPoints[i];
+    if(sum != in->points.size()) throw std::runtime_error("invalid number of points or invalid elements in numPoints");
+    std::vector<cv::Point> points;
+    for(size_t i = 0; i < in->points.size(); i += 2)
+        points.push_back(cv::Point(in->points[i], in->points[i+1]));
+    const cv::Point **pts = new const cv::Point*[in->numPoints.size()];
+    const cv::Point *pt = &points[0];
+    for(size_t i = 0; i < in->numPoints.size(); i++)
+    {
+        pts[i] = pt;
+        pt += in->numPoints[i];
+    }
+    cv::fillPoly(img->mat, pts, &in->numPoints[0], in->numPoints.size(), CV_RGB(in->r, in->g, in->b), in->type, in->shift, cv::Point(in->ox, in->oy));
+    for(size_t i = 0; i < in->numPoints.size(); i++)
+        delete[] pts[i];
+    delete[] pts;
+}
+
 int parseDistanceType(int d, int def)
 {
     switch(d)
