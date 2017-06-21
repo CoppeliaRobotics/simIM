@@ -87,10 +87,14 @@ int parseFormat(int f, int def)
         return CV_8UC1;
     case sim_im_fmt_8UC3:
         return CV_8UC3;
+    case sim_im_fmt_8UC4:
+        return CV_8UC4;
     case sim_im_fmt_32FC1:
         return CV_32FC1;
     case sim_im_fmt_32FC3:
         return CV_32FC3;
+    case sim_im_fmt_32FC4:
+        return CV_32FC4;
     }
     return def;
 }

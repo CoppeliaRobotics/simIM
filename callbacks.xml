@@ -10,11 +10,17 @@
         <item name="_8UC3">
             <description>3 channels, 8 bit unsigned int</description>
         </item>
+        <item name="_8UC4">
+            <description>4 channels, 8 bit unsigned int</description>
+        </item>
         <item name="_32FC1">
             <description>1 channel, 32 bit float</description>
         </item>
         <item name="_32FC3">
             <description>3 channels, 32 bit float</description>
+        </item>
+        <item name="_32FC4">
+            <description>4 channels, 32 bit float</description>
         </item>
     </enum>
     <command name="create">
