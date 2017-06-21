@@ -106,6 +106,24 @@ void write(SScriptCallBack *p, const char *cmd, write_in *in, write_out *out)
     cv::imwrite(in->filename, img->mat);
 }
 
+int parseInterp(interp i, int def)
+{
+    switch(i)
+    {
+    case sim_im_interp_nearest:
+        return cv::INTER_NEAREST;
+    case sim_im_interp_linear:
+        return cv::INTER_LINEAR;
+    case sim_im_interp_area:
+        return cv::INTER_AREA;
+    case sim_im_interp_cubic:
+        return cv::INTER_CUBIC;
+    case sim_im_interp_lanczos4:
+        return cv::INTER_LANCZOS4;
+    }
+    return def;
+}
+
 void resize(SScriptCallBack *p, const char *cmd, resize_in *in, resize_out *out)
 {
     if(in->width <= 0) throw std::runtime_error("invalid width");
@@ -113,15 +131,7 @@ void resize(SScriptCallBack *p, const char *cmd, resize_in *in, resize_out *out)
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = new Image(cv::Mat());
-    int interp = sim_im_interp_linear;
-    switch(in->interpolation)
-    {
-        case sim_im_interp_nearest:   interp = cv::INTER_NEAREST;   break;
-        case sim_im_interp_linear:    interp = cv::INTER_LINEAR;    break;
-        case sim_im_interp_area:      interp = cv::INTER_AREA;      break;
-        case sim_im_interp_cubic:     interp = cv::INTER_CUBIC;     break;
-        case sim_im_interp_lanczos4:  interp = cv::INTER_LANCZOS4;  break;
-    }
+    int interp = parseInterp(in->interpolation, sim_im_interp_linear);
     cv::resize(img->mat, dstImg->mat, cv::Size(in->width, in->height), 0, 0, interp);
     out->handle = dstImg->id;
 }
