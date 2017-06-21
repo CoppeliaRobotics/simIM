@@ -384,6 +384,16 @@ void fillPoly(SScriptCallBack *p, const char *cmd, fillPoly_in *in, fillPoly_out
     delete[] pts;
 }
 
+void fillConvexPoly(SScriptCallBack *p, const char *cmd, fillConvexPoly_in *in, fillConvexPoly_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    std::vector<cv::Point> points;
+    for(size_t i = 0; i < in->points.size(); i += 2)
+        points.push_back(cv::Point(in->points[i], in->points[i+1]));
+    cv::fillConvexPoly(img->mat, &points[0], points.size(), CV_RGB(in->r, in->g, in->b), in->type, in->shift);
+}
+
 int parseDistanceType(int d, int def)
 {
     switch(d)
