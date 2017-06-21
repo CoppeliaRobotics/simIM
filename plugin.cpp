@@ -104,7 +104,11 @@ void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
     if(in->width <= 0) throw std::runtime_error("invalid width");
     if(in->height <= 0) throw std::runtime_error("invalid height");
     int format = parseFormat(in->format, CV_8UC3);
-    out->handle = (new Image(cv::Mat::zeros(in->height, in->width, format)))->id;
+    out->handle = (new Image(
+            in->initialValue
+            ? cv::Mat::ones(in->height, in->width, format) * in->initialValue
+            : cv::Mat::zeros(in->height, in->width, format)
+    ))->id;
 }
 
 void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *out)

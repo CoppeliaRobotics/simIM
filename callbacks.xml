@@ -35,6 +35,9 @@
             <param name="format" type="int" default="sim_im_fmt_8UC3">
                 <description>image format (see <enum-ref name="format" />)</description>
             </param>
+            <param name="initialValue" type="int" default="0">
+                <description>initial value to fill matrix with</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="int">
