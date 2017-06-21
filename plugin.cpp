@@ -43,6 +43,7 @@
 #define SIMD_OPENCV_ENABLE
 #include <Simd/SimdLib.hpp>
 
+#include <boost/format.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
 class Image
@@ -185,6 +186,43 @@ void hls2rgb(SScriptCallBack *p, const char *cmd, hls2rgb_in *in, hls2rgb_out *o
     Image *dstImg = in->in_place ? img : new Image(cv::Mat());
     cv::cvtColor(img->mat, dstImg->mat, CV_HLS2RGB);
     out->handle = dstImg->id;
+}
+
+void split(SScriptCallBack *p, const char *cmd, split_in *in, split_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    const int ch = img->mat.channels();
+    if(ch == 1) throw std::runtime_error("not a multichannel image");
+    if(ch > 4) throw std::runtime_error("unsupported number of channels");
+    cv::Mat *dst = new cv::Mat[ch];
+    cv::split(img->mat, &dst[0]);
+    if(ch >= 1) out->handle1 = (new Image(dst[0]))->id;
+    if(ch >= 2) out->handle2 = (new Image(dst[1]))->id;
+    if(ch >= 3) out->handle3 = (new Image(dst[2]))->id;
+    if(ch >= 4) out->handle4 = (new Image(dst[3]))->id;
+    delete[] dst;
+}
+
+void merge(SScriptCallBack *p, const char *cmd, merge_in *in, merge_out *out)
+{
+    std::vector<int> handlev;
+    handlev.push_back(in->handle1);
+    handlev.push_back(in->handle2);
+    handlev.push_back(in->handle3);
+    handlev.push_back(in->handle4);
+    handlev.erase(std::find(handlev.begin(), handlev.end(), -1), handlev.end());
+    std::vector<cv::Mat> srcv;
+    for(size_t i = 0; i < handlev.size(); i++)
+    {
+        Image *img = Image::byId(in->handle1);
+        if(!img) throw std::runtime_error((boost::format("invalid channel %d handle") % i).str());
+        srcv.push_back(img->mat);
+    }
+    if(srcv.size() < 2) throw std::runtime_error("invalid number of channels");
+    Image *img = new Image(cv::Mat());
+    cv::merge(&srcv[0], srcv.size(), img->mat);
+    out->handle = img->id;
 }
 
 int parseInterp(int i, int def)
