@@ -726,6 +726,40 @@
         <return>
         </return>
     </command>
+    <command name="textSize">
+        <description>Calculates the width and height of a text string.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="str" type="string">
+                <description>text string to be drawn</description>
+            </param>
+            <param name="fontFace" type="int" default="sim_im_fontface_simplex">
+                <description>font face (see <enum-ref name="fontFace" />)</description>
+            </param>
+            <param name="italic" type="bool" default="false">
+                <description>if true text will have italic style</description>
+            </param>
+            <param name="fontScale" type="float" default="1.0">
+                <description>font scale</description>
+            </param>
+            <param name="thickness" type="int" default="1">
+                <description>thickness used to draw a text</description>
+            </param>
+        </params>
+        <return>
+            <param name="width" type="int">
+                <description>width of the text</description>
+            </param>
+            <param name="height" type="int">
+                <description>height of the text</description>
+            </param>
+            <param name="baseline" type="int">
+                <description>y-coordinate of the baseline relative to the bottom-most text point</description>
+            </param>
+        </return>
+    </command>
     <enum name="dist" item-prefix="dist_" base="4200">
         <item name="L1"></item>
         <item name="L2"></item>

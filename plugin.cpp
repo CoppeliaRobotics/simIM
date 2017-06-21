@@ -462,6 +462,16 @@ void text(SScriptCallBack *p, const char *cmd, text_in *in, text_out *out)
     cv::putText(img->mat, in->str, cv::Point(in->x, in->y), ff, in->fontScale, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->bottomLeftOrigin);
 }
 
+void textSize(SScriptCallBack *p, const char *cmd, textSize_in *in, textSize_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    int ff = parseFontFace(in->fontFace, cv::FONT_HERSHEY_SIMPLEX) | (in->italic ? cv::FONT_ITALIC : 0);
+    cv::Size sz = cv::getTextSize(in->str, ff, in->fontScale, in->thickness, &out->baseline);
+    out->width = sz.width;
+    out->height = sz.height;
+}
+
 int parseDistanceType(int d, int def)
 {
     switch(d)
