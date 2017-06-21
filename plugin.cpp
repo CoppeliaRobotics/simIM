@@ -352,6 +352,13 @@ void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
     cv::line(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
 }
 
+void arrowedLine(SScriptCallBack *p, const char *cmd, arrowedLine_in *in, arrowedLine_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    cv::arrowedLine(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift, in->tipLength);
+}
+
 void polylines(SScriptCallBack *p, const char *cmd, polylines_in *in, polylines_out *out)
 {
     Image *img = Image::byId(in->handle);
