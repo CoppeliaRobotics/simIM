@@ -6,3 +6,4 @@ simIM.addWeighted(im, im, -1, 0, 255, true)
 
 simIM.write(im,scene_path..'/test-01.jpg')
 simIM.destroy(im)
+print(simIM.numActiveHandles()..' active handles')

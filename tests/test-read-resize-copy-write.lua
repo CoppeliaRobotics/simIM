@@ -19,3 +19,4 @@ end
 simIM.write(im2,scene_path..'/tiled-lena.jpg')
 for i=1,#im do simIM.destroy(im[i]) end
 simIM.destroy(im2)
+print(simIM.numActiveHandles()..' active handles')

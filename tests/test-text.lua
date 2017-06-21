@@ -21,3 +21,4 @@ end
 
 simIM.write(im,scene_path..'/test-text.jpg')
 simIM.destroy(im)
+print(simIM.numActiveHandles()..' active handles')
