@@ -205,7 +205,7 @@ void split(SScriptCallBack *p, const char *cmd, split_in *in, split_out *out)
     cv::Mat *dst = new cv::Mat[ch];
     cv::split(img->mat, &dst[0]);
     for(size_t i = 0; i < ch; i++)
-        out->handles.push_back((new Image(dst[0]))->id);
+        out->handles.push_back((new Image(dst[i]))->id);
     delete[] dst;
 }
 
