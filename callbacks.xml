@@ -29,6 +29,32 @@
         <return>
         </return>
     </command>
+    <command name="read">
+        <description>Read an image from the specified file.</description>
+        <params>
+            <param name="filename" type="string">
+                <description>file name</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </return>
+    </command>
+    <command name="write">
+        <description>Write the image with given handle to a file.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="filename" type="string">
+                <description>file name</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <command name="line">
         <description>Draw a line segment between (x1,y1) and (x2,y2) points in the image.</description>
         <params>
@@ -64,19 +90,6 @@
             </param>
             <param name="shift" type="int" default="0">
                 <description>number of fractional bits in the point coordinates</description>
-            </param>
-        </params>
-        <return>
-        </return>
-    </command>
-    <command name="write">
-        <description>Write the image with given handle to a file.</description>
-        <params>
-            <param name="handle" type="int">
-                <description>handle to image</description>
-            </param>
-            <param name="filename" type="string">
-                <description>file name</description>
             </param>
         </params>
         <return>

@@ -56,8 +56,8 @@ public:
     cv::Mat mat;
 
 public:
-    Image(int width, int height, int type)
-        : id(nextId++), mat(cv::Mat::zeros(height, width, type))
+    Image(cv::Mat mat_)
+        : id(nextId++), mat(mat_)
     {
         idMap[id] = this;
     }
@@ -82,7 +82,7 @@ void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
 {
     if(in->width <= 0) throw std::runtime_error("invalid width");
     if(in->height <= 0) throw std::runtime_error("invalid height");
-    out->handle = (new Image(in->width, in->height, CV_8UC3))->id;
+    out->handle = (new Image(cv::Mat::zeros(in->height, in->width, CV_8UC3)))->id;
 }
 
 void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *out)
@@ -92,11 +92,11 @@ void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *o
     delete img;
 }
 
-void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
+void read(SScriptCallBack *p, const char *cmd, read_in *in, read_out *out)
 {
-    Image *img = Image::byId(in->handle);
-    if(!img) throw std::runtime_error("invalid image handle");
-    cv::line(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+    cv::Mat mat = cv::imread(in->filename, CV_LOAD_IMAGE_COLOR);
+    if(!mat.data) throw std::runtime_error("invalid image");
+    out->handle = (new Image(mat))->id;
 }
 
 void write(SScriptCallBack *p, const char *cmd, write_in *in, write_out *out)
@@ -104,6 +104,13 @@ void write(SScriptCallBack *p, const char *cmd, write_in *in, write_out *out)
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     cv::imwrite(in->filename, img->mat);
+}
+
+void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    cv::line(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
 }
 
 class Plugin : public vrep::Plugin
