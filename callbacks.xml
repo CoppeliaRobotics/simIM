@@ -405,6 +405,43 @@
         <return>
         </return>
     </command>
+    <command name="polylines">
+        <description>Draw several polygonal curves.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="points" type="table" item-type="int">
+                <description>curve points, i.e. {c1x1, c1y1, c1x2, c1y2, ..., c1xN1, c1yN1, c2x1, c2y1, ..., c2xN2, c2yN2, ..., cMxNM, cMyNM}</description>
+            </param>
+            <param name="numPoints" type="table" item-type="int">
+                <description>lengths of curves, i.e. {N1, N2, ..., NM}. the sum of numPoints items must be equal to the number of x,y pairs in points.</description>
+            </param>
+            <param name="isClosed" type="bool">
+                <description>Flag indicating whether the drawn polylines are closed or not. If they are closed, the function draws a line from the last vertex of each curve to its first vertex.</description>
+            </param>
+            <param name="r" type="int" default="255">
+                <description>red component (0..255)</description>
+            </param>
+            <param name="g" type="int" default="255">
+                <description>green component (0..255)</description>
+            </param>
+            <param name="b" type="int" default="255">
+                <description>blue component (0..255)</description>
+            </param>
+            <param name="thickness" type="int" default="1">
+                <description>line thickness</description>
+            </param>
+            <param name="type" type="int" default="8">
+                <description>type of the line (8 for 8-connected line, 4 for 4-connected line, or 16 for antialiased line)</description>
+            </param>
+            <param name="shift" type="int" default="0">
+                <description>number of fractional bits in the point coordinates</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <command name="rectangle">
         <description>Draw a rectangle with corners (x1,y1) and (x2,y2) points in the image.</description>
         <params>

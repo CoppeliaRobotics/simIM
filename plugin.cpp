@@ -340,6 +340,29 @@ void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
     cv::line(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
 }
 
+void polylines(SScriptCallBack *p, const char *cmd, polylines_in *in, polylines_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    int sum = 0;
+    for(size_t i = 0; i < in->numPoints.size(); i++) sum += 2 * in->numPoints[i];
+    if(sum != in->points.size()) throw std::runtime_error("invalid number of points or invalid elements in numPoints");
+    std::vector<cv::Point> points;
+    for(size_t i = 0; i < in->points.size(); i += 2)
+        points.push_back(cv::Point(in->points[i], in->points[i+1]));
+    const cv::Point **pts = new const cv::Point*[in->numPoints.size()];
+    const cv::Point *pt = &points[0];
+    for(size_t i = 0; i < in->numPoints.size(); i++)
+    {
+        pts[i] = pt;
+        pt += in->numPoints[i];
+    }
+    cv::polylines(img->mat, pts, &in->numPoints[0], in->numPoints.size(), in->isClosed, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+    for(size_t i = 0; i < in->numPoints.size(); i++)
+        delete[] pts[i];
+    delete[] pts;
+}
+
 void rectangle(SScriptCallBack *p, const char *cmd, rectangle_in *in, rectangle_out *out)
 {
     Image *img = Image::byId(in->handle);
