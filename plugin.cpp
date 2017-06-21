@@ -340,6 +340,45 @@ void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
     cv::line(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
 }
 
+int parseDistanceType(int d, int def)
+{
+    switch(d)
+    {
+    case sim_im_dist_L1:
+        return CV_DIST_L1;
+    case sim_im_dist_L2:
+        return CV_DIST_L2;
+    case sim_im_dist_C:
+        return CV_DIST_C;
+    }
+    return def;
+}
+
+int parseMaskSize(int m, int def)
+{
+    switch(m)
+    {
+    case sim_im_masksize_3x3:
+        return 3;
+    case sim_im_masksize_5x5:
+        return 5;
+    case sim_im_masksize_precise:
+        return CV_DIST_MASK_PRECISE;
+    }
+    return def;
+}
+
+void distanceTransform(SScriptCallBack *p, const char *cmd, distanceTransform_in *in, distanceTransform_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    int dt = parseDistanceType(in->distanceType, CV_DIST_L2);
+    int ms = parseMaskSize(in->maskSize, CV_DIST_MASK_PRECISE);
+    cv::distanceTransform(img->mat, dstImg->mat, dt, ms);
+    out->handle = dstImg->id;
+}
+
 class Plugin : public vrep::Plugin
 {
 public:

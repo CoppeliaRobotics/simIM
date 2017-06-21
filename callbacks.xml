@@ -405,4 +405,33 @@
         <return>
         </return>
     </command>
+    <enum name="dist" item-prefix="dist_" base="4200">
+        <item name="L1"></item>
+        <item name="L2"></item>
+        <item name="C"></item>
+    </enum>
+    <enum name="maskSize" item-prefix="masksize" base="4200">
+        <item name="_3x3"></item>
+        <item name="_5x5"></item>
+        <item name="_precise"></item>
+    </enum>
+    <command name="distanceTransform">
+        <description>Calculates the distance to the closest zero pixel for each pixel of the source image.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="distanceType" type="int" default="sim_im_dist_L2">
+                <description>type of distance (see <enum-ref name="dist" />)</description>
+            </param>
+            <param name="maskSize" type="int" default="sim_im_masksize_precise">
+                <description>mask size (see <enum-ref name="masksize" />)</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </return>
+    </command>
 </plugin>
