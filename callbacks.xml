@@ -670,6 +670,62 @@
         <return>
         </return>
     </command>
+    <enum name="fontFace" item-prefix="fontface_" base="9000">
+        <item name="simplex"></item>
+        <item name="plain"></item>
+        <item name="duplex"></item>
+        <item name="complex"></item>
+        <item name="triplex"></item>
+        <item name="complex_small"></item>
+        <item name="script_simplex"></item>
+        <item name="script_complex"></item>
+    </enum>
+    <command name="text">
+        <description>Drawn a text string.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="str" type="string">
+                <description>text string to be drawn</description>
+            </param>
+            <param name="x" type="int">
+                <description>x coordinate of the origin (bottom-left corner of the string)</description>
+            </param>
+            <param name="y" type="int">
+                <description>y coordinate of the origin (bottom-left corner of the string)</description>
+            </param>
+            <param name="fontFace" type="int" default="sim_im_fontface_simplex">
+                <description>font face (see <enum-ref name="fontFace" />)</description>
+            </param>
+            <param name="italic" type="bool" default="false">
+                <description>if true text will have italic style</description>
+            </param>
+            <param name="fontScale" type="float" default="1.0">
+                <description>font scale</description>
+            </param>
+            <param name="r" type="int" default="255">
+                <description>red component (0..255)</description>
+            </param>
+            <param name="g" type="int" default="255">
+                <description>green component (0..255)</description>
+            </param>
+            <param name="b" type="int" default="255">
+                <description>blue component (0..255)</description>
+            </param>
+            <param name="thickness" type="int" default="1">
+                <description>thickness used to draw a text</description>
+            </param>
+            <param name="type" type="int" default="8">
+                <description>type of the line (8 for 8-connected line, 4 for 4-connected line, or 16 for antialiased line)</description>
+            </param>
+            <param name="bottomLeftOrigin" type="bool" default="false">
+                <description>When true, the image data origin is at the bottom-left corner. Otherwise, it is at the top-left corner</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <enum name="dist" item-prefix="dist_" base="4200">
         <item name="L1"></item>
         <item name="L2"></item>

@@ -429,6 +429,39 @@ void fillConvexPoly(SScriptCallBack *p, const char *cmd, fillConvexPoly_in *in, 
     cv::fillConvexPoly(img->mat, &points[0], points.size(), CV_RGB(in->r, in->g, in->b), in->type, in->shift);
 }
 
+int parseFontFace(int f, int def)
+{
+    switch(f)
+    {
+    case sim_im_fontface_simplex:
+        return cv::FONT_HERSHEY_SIMPLEX;
+    case sim_im_fontface_plain:
+        return cv::FONT_HERSHEY_PLAIN;
+    case sim_im_fontface_duplex:
+        return cv::FONT_HERSHEY_DUPLEX;
+    case sim_im_fontface_complex:
+        return cv::FONT_HERSHEY_COMPLEX;
+    case sim_im_fontface_triplex:
+        return cv::FONT_HERSHEY_TRIPLEX;
+    case sim_im_fontface_complex_small:
+        return cv::FONT_HERSHEY_COMPLEX_SMALL;
+    case sim_im_fontface_script_simplex:
+        return cv::FONT_HERSHEY_SCRIPT_SIMPLEX;
+    case sim_im_fontface_script_complex:
+        return cv::FONT_HERSHEY_SCRIPT_COMPLEX;
+    default:
+        return def;
+    }
+}
+
+void text(SScriptCallBack *p, const char *cmd, text_in *in, text_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    int ff = parseFontFace(in->fontFace, cv::FONT_HERSHEY_SIMPLEX) | (in->italic ? cv::FONT_ITALIC : 0);
+    cv::putText(img->mat, in->str, cv::Point(in->x, in->y), ff, in->fontScale, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->bottomLeftOrigin);
+}
+
 int parseDistanceType(int d, int def)
 {
     switch(d)
