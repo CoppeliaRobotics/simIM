@@ -106,6 +106,47 @@ void write(SScriptCallBack *p, const char *cmd, write_in *in, write_out *out)
     cv::imwrite(in->filename, img->mat);
 }
 
+void resize(SScriptCallBack *p, const char *cmd, resize_in *in, resize_out *out)
+{
+    if(in->width <= 0) throw std::runtime_error("invalid width");
+    if(in->height <= 0) throw std::runtime_error("invalid height");
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    int interp = sim_im_interp_linear;
+    switch(in->interpolation)
+    {
+        case sim_im_interp_nearest:   interp = cv::INTER_NEAREST;   break;
+        case sim_im_interp_linear:    interp = cv::INTER_LINEAR;    break;
+        case sim_im_interp_area:      interp = cv::INTER_AREA;      break;
+        case sim_im_interp_cubic:     interp = cv::INTER_CUBIC;     break;
+        case sim_im_interp_lanczos4:  interp = cv::INTER_LANCZOS4;  break;
+    }
+    cv::resize(img->mat, dstImg->mat, cv::Size(in->width, in->height), 0, 0, interp);
+    out->handle = dstImg->id;
+}
+
+void size(SScriptCallBack *p, const char *cmd, size_in *in, size_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    out->width = img->mat.cols;
+    out->height = img->mat.rows;
+}
+
+void copy(SScriptCallBack *p, const char *cmd, copy_in *in, copy_out *out)
+{
+    if(in->width <= 0) throw std::runtime_error("invalid width");
+    if(in->height <= 0) throw std::runtime_error("invalid height");
+    Image *srcImg = Image::byId(in->srcHandle);
+    if(!srcImg) throw std::runtime_error("invalid source image handle");
+    Image *dstImg = Image::byId(in->dstHandle);
+    if(!dstImg) throw std::runtime_error("invalid destination image handle");
+    cv::Mat src = srcImg->mat(cv::Rect(in->srcx, in->srcy, in->width, in->height));
+    cv::Mat dst = dstImg->mat(cv::Rect(in->dstx, in->dsty, in->width, in->height));
+    src.copyTo(dst);
+}
+
 void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
 {
     Image *img = Image::byId(in->handle);

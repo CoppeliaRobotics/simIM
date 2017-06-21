@@ -55,6 +55,92 @@
         <return>
         </return>
     </command>
+    <enum name="interp" item-prefix="interp_" base="1200">
+        <item name="nearest">
+            <description>nearest-neighbor interpolation</description>
+        </item>
+        <item name="linear">
+            <description>bilinear interpolation</description>
+        </item>
+        <item name="area">
+            <description>resampling using pixel area relation (best for shrinking)</description>
+        </item>
+        <item name="cubic">
+            <description>bicubic interpolation over 4x4 pixel neighborhood</description>
+        </item>
+        <item name="lanczos4">
+            <description>Lanczos interpolation over 8x8 pixel neighborhood</description>
+        </item>
+    </enum>
+    <command name="resize">
+        <description>Resize an image and return the resized image (original image is not modified).</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="width" type="int">
+                <description>width of the new image</description>
+            </param>
+            <param name="height" type="int">
+                <description>height of the new image</description>
+            </param>
+            <param name="interpolation" type="int" default="sim_im_interp_linear">
+                <description>type of interpolation (see <enum-ref name="interp" />)</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to resized image</description>
+            </param>
+        </return>
+    </command>
+    <command name="size">
+        <description>Get the size of an image.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="width" type="int">
+                <description>width of the new image</description>
+            </param>
+            <param name="height" type="int">
+                <description>height of the new image</description>
+            </param>
+        </return>
+    </command>
+    <command name="copy">
+        <description>Copy a (portion of) image to another image.</description>
+        <params>
+            <param name="srcHandle" type="int">
+                <description>handle to source image</description>
+            </param>
+            <param name="srcx" type="int">
+                <description>x offset in the source image</description>
+            </param>
+            <param name="srcy" type="int">
+                <description>y offset in the source image</description>
+            </param>
+            <param name="dstHandle" type="int">
+                <description>handle to destination image</description>
+            </param>
+            <param name="dstx" type="int">
+                <description>x offset in the destination image</description>
+            </param>
+            <param name="dsty" type="int">
+                <description>y offset in the destination image</description>
+            </param>
+            <param name="width" type="int">
+                <description>width of the copied region</description>
+            </param>
+            <param name="height" type="int">
+                <description>height of the copied region</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <command name="line">
         <description>Draw a line segment between (x1,y1) and (x2,y2) points in the image.</description>
         <params>
