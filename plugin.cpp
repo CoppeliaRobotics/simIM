@@ -194,28 +194,19 @@ void split(SScriptCallBack *p, const char *cmd, split_in *in, split_out *out)
     if(!img) throw std::runtime_error("invalid image handle");
     const int ch = img->mat.channels();
     if(ch == 1) throw std::runtime_error("not a multichannel image");
-    if(ch > 4) throw std::runtime_error("unsupported number of channels");
     cv::Mat *dst = new cv::Mat[ch];
     cv::split(img->mat, &dst[0]);
-    if(ch >= 1) out->handle1 = (new Image(dst[0]))->id;
-    if(ch >= 2) out->handle2 = (new Image(dst[1]))->id;
-    if(ch >= 3) out->handle3 = (new Image(dst[2]))->id;
-    if(ch >= 4) out->handle4 = (new Image(dst[3]))->id;
+    for(size_t i = 0; i < ch; i++)
+        out->handles.push_back((new Image(dst[0]))->id);
     delete[] dst;
 }
 
 void merge(SScriptCallBack *p, const char *cmd, merge_in *in, merge_out *out)
 {
-    std::vector<int> handlev;
-    handlev.push_back(in->handle1);
-    handlev.push_back(in->handle2);
-    handlev.push_back(in->handle3);
-    handlev.push_back(in->handle4);
-    handlev.erase(std::find(handlev.begin(), handlev.end(), -1), handlev.end());
     std::vector<cv::Mat> srcv;
-    for(size_t i = 0; i < handlev.size(); i++)
+    for(size_t i = 0; i < in->handles.size(); i++)
     {
-        Image *img = Image::byId(in->handle1);
+        Image *img = Image::byId(in->handles[i]);
         if(!img) throw std::runtime_error((boost::format("invalid channel %d handle") % i).str());
         srcv.push_back(img->mat);
     }

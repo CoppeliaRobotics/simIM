@@ -198,39 +198,21 @@
             </param>
         </params>
         <return>
-            <param name="handle1" type="int" default="-1">
-                <description>handle to the first channel image</description>
-            </param>
-            <param name="handle2" type="int" default="-1">
-                <description>handle to the second channel image</description>
-            </param>
-            <param name="handle3" type="int" default="-1">
-                <description>handle to the third channel image</description>
-            </param>
-            <param name="handle4" type="int" default="-1">
-                <description>handle to the fourth channel image</description>
+            <param name="handles" type="table" item-type="int">
+                <description>handles to individual channel images</description>
             </param>
         </return>
     </command>
     <command name="merge">
         <description>Merge many single channel images into a multichannel image.</description>
         <params>
-            <param name="handle1" type="int" default="-1">
-                <description>handle to the first channel image</description>
-            </param>
-            <param name="handle2" type="int" default="-1">
-                <description>handle to the second channel image</description>
-            </param>
-            <param name="handle3" type="int" default="-1">
-                <description>handle to the third channel image</description>
-            </param>
-            <param name="handle4" type="int" default="-1">
-                <description>handle to the fourth channel image</description>
+            <param name="handles" type="table" item-type="int">
+                <description>handles to individual channel images</description>
             </param>
         </params>
         <return>
             <param name="handle" type="int">
-                <description>handle to image</description>
+                <description>handle to merged image</description>
             </param>
         </return>
     </command>
