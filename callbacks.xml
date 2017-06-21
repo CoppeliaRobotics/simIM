@@ -3,6 +3,20 @@
 
 <plugin name="Image" short-name="IM" author="federico.ferri.it@gmail.com">
     <description>Plugin for processing images in V-REP</description>
+    <enum name="format" item-prefix="fmt_" base="3600">
+        <item name="rgb8">
+            <description>RGB 8 bit unsigned int channels</description>
+        </item>
+        <item name="gray8">
+            <description>Grayscale 8 bit unsigned int</description>
+        </item>
+        <item name="rgb32">
+            <description>RGB 32 bit float channels</description>
+        </item>
+        <item name="gray32">
+            <description>Grayscale 32 bit float</description>
+        </item>
+    </enum>
     <command name="create">
         <description>Create an image with given size</description>
         <params>
@@ -11,6 +25,9 @@
             </param>
             <param name="height" type="int">
                 <description>height</description>
+            </param>
+            <param name="format" type="int" default="sim_im_fmt_rgb8">
+                <description>image format (see <enum-ref name="format" />)</description>
             </param>
         </params>
         <return>

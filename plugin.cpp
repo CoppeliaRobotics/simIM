@@ -78,11 +78,28 @@ public:
 int Image::nextId = 1;
 std::map<int, Image*> Image::idMap;
 
+int parseFormat(int f, int def)
+{
+    switch(f)
+    {
+    case sim_im_fmt_rgb8:
+        return CV_8UC3;
+    case sim_im_fmt_gray8:
+        return CV_8UC1;
+    case sim_im_fmt_rgb32:
+        return CV_32FC3;
+    case sim_im_fmt_gray32:
+        return CV_32FC1;
+    }
+    return def;
+}
+
 void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
 {
     if(in->width <= 0) throw std::runtime_error("invalid width");
     if(in->height <= 0) throw std::runtime_error("invalid height");
-    out->handle = (new Image(cv::Mat::zeros(in->height, in->width, CV_8UC3)))->id;
+    int format = parseFormat(in->format, CV_8UC3);
+    out->handle = (new Image(cv::Mat::zeros(in->height, in->width, format)))->id;
 }
 
 void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *out)
@@ -106,7 +123,7 @@ void write(SScriptCallBack *p, const char *cmd, write_in *in, write_out *out)
     cv::imwrite(in->filename, img->mat);
 }
 
-int parseInterp(interp i, int def)
+int parseInterp(int i, int def)
 {
     switch(i)
     {
