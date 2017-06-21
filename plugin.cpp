@@ -347,6 +347,20 @@ void rectangle(SScriptCallBack *p, const char *cmd, rectangle_in *in, rectangle_
     cv::rectangle(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
 }
 
+void circle(SScriptCallBack *p, const char *cmd, circle_in *in, circle_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    cv::circle(img->mat, cv::Point(in->cx, in->cy), in->radius, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+}
+
+void ellipse(SScriptCallBack *p, const char *cmd, ellipse_in *in, ellipse_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    cv::ellipse(img->mat, cv::Point(in->cx, in->cy), cv::Size(in->rx, in->ry), in->angle, in->startAngle, in->endAngle, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+}
+
 int parseDistanceType(int d, int def)
 {
     switch(d)

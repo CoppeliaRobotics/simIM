@@ -445,6 +445,92 @@
         <return>
         </return>
     </command>
+    <command name="circle">
+        <description>Draw a circle with center (cx,cy) and radius r.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="cx" type="int">
+                <description>x coordinate of center</description>
+            </param>
+            <param name="cy" type="int">
+                <description>y coordinate of center</description>
+            </param>
+            <param name="radius" type="int">
+                <description>circle radius</description>
+            </param>
+            <param name="r" type="int" default="255">
+                <description>red component (0..255)</description>
+            </param>
+            <param name="g" type="int" default="255">
+                <description>green component (0..255)</description>
+            </param>
+            <param name="b" type="int" default="255">
+                <description>blue component (0..255)</description>
+            </param>
+            <param name="thickness" type="int" default="1">
+                <description>line thickness (negative values means rect is filled)</description>
+            </param>
+            <param name="type" type="int" default="8">
+                <description>type of the line (8 for 8-connected line, 4 for 4-connected line, or 16 for antialiased line)</description>
+            </param>
+            <param name="shift" type="int" default="0">
+                <description>number of fractional bits in the point coordinates</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="ellipse">
+        <description>Draw an ellipse with center (cx,cy) and axes (rx,ry) points in the image.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="cx" type="int">
+                <description>x coordinate of center</description>
+            </param>
+            <param name="cy" type="int">
+                <description>y coordinate of center</description>
+            </param>
+            <param name="rx" type="int">
+                <description>radius along x axis</description>
+            </param>
+            <param name="ry" type="int">
+                <description>radius along y axis</description>
+            </param>
+            <param name="angle" type="float" default="0.0">
+                <description>rotation in degrees</description>
+            </param>
+            <param name="startAngle" type="float" default="0.0">
+                <description>starting angle of the elliptic arc in degrees</description>
+            </param>
+            <param name="endAngle" type="float" default="360.0">
+                <description>ending angle of the elliptic arc in degrees</description>
+            </param>
+            <param name="r" type="int" default="255">
+                <description>red component (0..255)</description>
+            </param>
+            <param name="g" type="int" default="255">
+                <description>green component (0..255)</description>
+            </param>
+            <param name="b" type="int" default="255">
+                <description>blue component (0..255)</description>
+            </param>
+            <param name="thickness" type="int" default="1">
+                <description>line thickness (negative values means rect is filled)</description>
+            </param>
+            <param name="type" type="int" default="8">
+                <description>type of the line (8 for 8-connected line, 4 for 4-connected line, or 16 for antialiased line)</description>
+            </param>
+            <param name="shift" type="int" default="0">
+                <description>number of fractional bits in the point coordinates</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <enum name="dist" item-prefix="dist_" base="4200">
         <item name="L1"></item>
         <item name="L2"></item>
