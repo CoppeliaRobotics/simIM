@@ -365,6 +365,43 @@
         <return>
         </return>
     </command>
+    <command name="clipLine">
+        <description>Clips the line against the image rectangle.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="x1" type="int">
+                <description>x coordinate of first point</description>
+            </param>
+            <param name="y1" type="int">
+                <description>y coordinate of first point</description>
+            </param>
+            <param name="x2" type="int">
+                <description>x coordinate of second point</description>
+            </param>
+            <param name="y2" type="int">
+                <description>y coordinate of second point</description>
+            </param>
+        </params>
+        <return>
+            <param name="valid" type="bool">
+                <description>false if the line segment is completely outside the image rectangle, otherwise true.</description>
+            </param>
+            <param name="x1" type="int">
+                <description>x coordinate of first point</description>
+            </param>
+            <param name="y1" type="int">
+                <description>y coordinate of first point</description>
+            </param>
+            <param name="x2" type="int">
+                <description>x coordinate of second point</description>
+            </param>
+            <param name="y2" type="int">
+                <description>y coordinate of second point</description>
+            </param>
+        </return>
+    </command>
     <command name="line">
         <description>Draw a line segment between (x1,y1) and (x2,y2) points in the image.</description>
         <params>

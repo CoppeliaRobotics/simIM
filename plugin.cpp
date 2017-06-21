@@ -333,6 +333,18 @@ void copy(SScriptCallBack *p, const char *cmd, copy_in *in, copy_out *out)
     src.copyTo(dst);
 }
 
+void clipLine(SScriptCallBack *p, const char *cmd, clipLine_in *in, clipLine_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    cv::Point p1(in->x1, in->y1), p2(in->x2, in->y2);
+    out->valid = cv::clipLine(cv::Rect(0, 0, img->mat.cols, img->mat.rows), p1, p2);
+    out->x1 = p1.x;
+    out->y1 = p1.y;
+    out->x2 = p2.x;
+    out->y2 = p2.y;
+}
+
 void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
 {
     Image *img = Image::byId(in->handle);
