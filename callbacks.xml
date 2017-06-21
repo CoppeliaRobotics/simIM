@@ -803,6 +803,575 @@
             </param>
         </return>
     </command>
+    <command name="abs">
+        <description>Calculates an absolute value of each pixel.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="absdiff">
+        <description>Calculates the per-element absolute difference between two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="absdiffK">
+        <description>Calculates the per-element absolute difference between an array and a scalar.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="k" type="table" item-type="float">
+                <description>scalar</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="add">
+        <description>Calculates the per-element sum of two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="addK">
+        <description>Calculates the per-element sum of an array and a scalar.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="k" type="table" item-type="float">
+                <description>scalar</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="subtract">
+        <description>Calculates the per-element difference of two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="subtractK">
+        <description>Calculates the per-element difference of an array and a scalar.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="k" type="table" item-type="float">
+                <description>scalar</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="multiply">
+        <description>Calculates the per-element product of two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="divide">
+        <description>Calculates the per-element division of two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="divideK">
+        <description>Calculates the per-element division of a scalar by an array.</description>
+        <params>
+            <param name="k" type="table" item-type="float">
+                <description>scalar</description>
+            </param>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <enum name="cmpOp" item-prefix="cmpop_" base="5700">
+        <item name="eq"></item>
+        <item name="gt"></item>
+        <item name="ge"></item>
+        <item name="lt"></item>
+        <item name="le"></item>
+        <item name="ne"></item>
+    </enum>
+    <command name="compare">
+        <description>Performs the per-element comparison of two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+            <param name="op" type="int">
+                <description>comparison operator</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="compareK">
+        <description>Performs the per-element comparison of an array and scalar value.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="k" type="table" item-type="float">
+                <description>scalar</description>
+            </param>
+            <param name="op" type="int">
+                <description>comparison operator</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <enum name="reduceOp" item-prefix="reduceop_" base="6700">
+        <item name="sum">
+            <description>the output is the sum of all rows/columns of the matrix.</description>
+        </item>
+        <item name="avg">
+            <description>the output is the mean vector of all rows/columns of the matrix.</description>
+        </item>
+        <item name="max">
+            <description>the output is the maximum (column/row-wise) of all rows/columns of the matrix.</description>
+        </item>
+        <item name="min">
+            <description>the output is the minimum (column/row-wise) of all rows/columns of the matrix.</description>
+        </item>
+    </enum>
+    <command name="reduce">
+        <description>Reduces a matrix to a vector.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="dim" type="int">
+                <description>dimension index along which the matrix is reduced. 0 means that the matrix is reduced to a single row. 1 means that the matrix is reduced to a single column.</description>
+            </param>
+            <param name="op" type="int">
+                <description>reduction operation (see <enum-ref name="reduceOp" />)</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="repeat">
+        <description>Fills the output array with repeated copies of the input array.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="nx" type="int">
+                <description>how many times the src is repeated along the horizontal axis</description>
+            </param>
+            <param name="ny" type="int">
+                <description>how many times the src is repeated along the vertical axis</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <enum name="flipOp" item-prefix="flipop_" base="8900">
+        <item name="x">
+            <description>flip around the x-axis</description>
+        </item>
+        <item name="y">
+            <description>flip around the y-axis</description>
+        </item>
+        <item name="both">
+            <description>flip around both axes</description>
+        </item>
+    </enum>
+    <command name="flip">
+        <description>Flips an image around vertical, horizontal, or both axes.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="op" type="int" default="0">
+                <description>a flag to specify how to flip the array (see <enum-ref name="flipOp" />)</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="log">
+        <description>Calculates the natural logarithm of every array element.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="exp">
+        <description>Calculates the exponential of every array element.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="pow">
+        <description>Raises every array element to a power.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="power" type="float">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="sqrt">
+        <description>Calculates the square root of every array element.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="addWeighted">
+        <description>Calculates the weighted sum of two arrays, i.e. DST(i) = SRC1(i)*alpha + SRC2(i)*beta + gamma.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+            <param name="alpha" type="float">
+                <description>alpha coefficient</description>
+            </param>
+            <param name="beta" type="float">
+                <description>beta coefficient</description>
+            </param>
+            <param name="gamma" type="float">
+                <description>gamma coefficient</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="scaleAdd">
+        <description>Calculates the sum of a scaled array and another array, i.e. DST(i) = SRC1(i)*scale + SRC2(i).</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+            <param name="alpha" type="float">
+                <description>scale coefficient</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="magnitude">
+        <description>Calculates the magnitude of 2D vectors, i.e. DST(i) = sqrt(SRC1(i)^2, SRC2(i)^2).</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="phase">
+        <description>Calculates the rotation angle of 2D vectors, i.e. DST(i) = atan2(SRC2(i), SRC1(i)).</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+            <param name="angleInDegrees" type="bool" default="false">
+                <description>when true, the function calculates the angle in degrees, otherwise, they are measured in radians</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="polar2cart">
+        <description>Calculates x and y coordinates of 2D vectors from their magnitude and angle.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image (magnitude)</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image (angle)</description>
+            </param>
+            <param name="angleInDegrees" type="bool" default="false">
+                <description>when true, the function calculates the angle in degrees, otherwise, they are measured in radians</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle1" type="int">
+                <description>handle of resulting image (x)</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle of resulting image (y)</description>
+            </param>
+        </return>
+    </command>
+    <command name="cart2polar">
+        <description>Calculates magnitude and angle coordinates of 2D vectors from their x and y coordinates.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image (x)</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image (y)</description>
+            </param>
+            <param name="angleInDegrees" type="bool" default="false">
+                <description>when true, the function calculates the angle in degrees, otherwise, they are measured in radians</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle1" type="int">
+                <description>handle of resulting image (magnitude)</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle of resulting image (angle)</description>
+            </param>
+        </return>
+    </command>
+    <command name="bitwiseAnd">
+        <description>Calculates the per-element bit-wise conjunction of two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="bitwiseAndK">
+        <description>Calculates the per-element bit-wise conjunction of an array and a scalar.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="k" type="table" item-type="float">
+                <description>scalar</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="bitwiseOr">
+        <description>Calculates the per-element bit-wise disjunction of two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="bitwiseOrK">
+        <description>Calculates the per-element bit-wise disjunction of an array and a scalar.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="k" type="table" item-type="float">
+                <description>scalar</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="bitwiseXor">
+        <description>Calculates the per-element bit-wise exclusive-or of two arrays.</description>
+        <params>
+            <param name="handle1" type="int">
+                <description>handle to first image</description>
+            </param>
+            <param name="handle2" type="int">
+                <description>handle to second image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="bitwiseXorK">
+        <description>Calculates the per-element bit-wise exclusive-or of an array and a scalar.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="k" type="table" item-type="float">
+                <description>scalar</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
+    <command name="bitwiseNot">
+        <description>Inverts every bit of an array.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle of resulting image</description>
+            </param>
+        </return>
+    </command>
     <enum name="dist" item-prefix="dist_" base="4200">
         <item name="L1"></item>
         <item name="L2"></item>

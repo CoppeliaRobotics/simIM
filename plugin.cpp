@@ -479,6 +479,385 @@ void textSize(SScriptCallBack *p, const char *cmd, textSize_in *in, textSize_out
     out->height = sz.height;
 }
 
+void abs(SScriptCallBack *p, const char *cmd, abs_in *in, abs_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    dstImg->mat = cv::abs(img->mat);
+    out->handle = dstImg->id;
+}
+
+void absdiff(SScriptCallBack *p, const char *cmd, absdiff_in *in, absdiff_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::absdiff(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void absdiffK(SScriptCallBack *p, const char *cmd, absdiffK_in *in, absdiffK_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::absdiff(img->mat, in->k, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void add(SScriptCallBack *p, const char *cmd, add_in *in, add_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::add(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void addK(SScriptCallBack *p, const char *cmd, addK_in *in, addK_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::add(img->mat, in->k, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void subtract(SScriptCallBack *p, const char *cmd, subtract_in *in, subtract_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::subtract(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void subtractK(SScriptCallBack *p, const char *cmd, subtractK_in *in, subtractK_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::subtract(img->mat, in->k, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void multiply(SScriptCallBack *p, const char *cmd, multiply_in *in, multiply_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::multiply(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void divide(SScriptCallBack *p, const char *cmd, divide_in *in, divide_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::divide(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void divideK(SScriptCallBack *p, const char *cmd, divideK_in *in, divideK_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::divide(in->k, img->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+int parseCmpOp(int o, int def)
+{
+    switch(o)
+    {
+    case sim_im_cmpop_eq:
+        return cv::CMP_EQ;
+    case sim_im_cmpop_gt:
+        return cv::CMP_GT;
+    case sim_im_cmpop_ge:
+        return cv::CMP_GE;
+    case sim_im_cmpop_lt:
+        return cv::CMP_LT;
+    case sim_im_cmpop_le:
+        return cv::CMP_LE;
+    case sim_im_cmpop_ne:
+        return cv::CMP_NE;
+    default:
+        return def;
+    }
+}
+
+void compare(SScriptCallBack *p, const char *cmd, compare_in *in, compare_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    int op = parseCmpOp(in->op, cv::CMP_EQ);
+    cv::compare(img1->mat, img2->mat, dstImg->mat, op);
+    out->handle = dstImg->id;
+}
+
+void compareK(SScriptCallBack *p, const char *cmd, compareK_in *in, compareK_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    int op = parseCmpOp(in->op, cv::CMP_EQ);
+    cv::compare(img->mat, in->k, dstImg->mat, op);
+    out->handle = dstImg->id;
+}
+
+int parseReduceOp(int o, int def)
+{
+    switch(o)
+    {
+    case sim_im_reduceop_sum:
+        return CV_REDUCE_SUM;
+    case sim_im_reduceop_avg:
+        return CV_REDUCE_AVG;
+    case sim_im_reduceop_max:
+        return CV_REDUCE_MAX;
+    case sim_im_reduceop_min:
+        return CV_REDUCE_MIN;
+    default:
+        return def;
+    }
+}
+
+void reduce(SScriptCallBack *p, const char *cmd, reduce_in *in, reduce_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    int op = parseReduceOp(in->op, CV_REDUCE_SUM);
+    cv::reduce(img->mat, dstImg->mat, in->dim, op);
+    out->handle = dstImg->id;
+}
+
+void repeat(SScriptCallBack *p, const char *cmd, repeat_in *in, repeat_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::repeat(img->mat, in->ny, in->nx, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+int parseFlipOp(int o, int def)
+{
+    switch(o)
+    {
+    case sim_im_flipop_x:
+        return 0;
+    case sim_im_flipop_y:
+        return 1;
+    case sim_im_flipop_both:
+        return -1;
+    default:
+        return def;
+    }
+}
+
+void flip(SScriptCallBack *p, const char *cmd, flip_in *in, flip_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    int op = parseFlipOp(in->op, 0);
+    cv::flip(img->mat, dstImg->mat, op);
+    out->handle = dstImg->id;
+}
+
+void log(SScriptCallBack *p, const char *cmd, log_in *in, log_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::log(img->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void exp(SScriptCallBack *p, const char *cmd, exp_in *in, exp_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::exp(img->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void pow(SScriptCallBack *p, const char *cmd, pow_in *in, pow_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::pow(img->mat, in->power, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void sqrt(SScriptCallBack *p, const char *cmd, sqrt_in *in, sqrt_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::sqrt(img->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void addWeighted(SScriptCallBack *p, const char *cmd, addWeighted_in *in, addWeighted_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::addWeighted(img1->mat, in->alpha, img2->mat, in->beta, in->gamma, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void scaleAdd(SScriptCallBack *p, const char *cmd, scaleAdd_in *in, scaleAdd_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::scaleAdd(img1->mat, in->alpha, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void magnitude(SScriptCallBack *p, const char *cmd, magnitude_in *in, magnitude_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::magnitude(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void phase(SScriptCallBack *p, const char *cmd, phase_in *in, phase_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::phase(img1->mat, img2->mat, dstImg->mat, in->angleInDegrees);
+    out->handle = dstImg->id;
+}
+
+void polar2cart(SScriptCallBack *p, const char *cmd, polar2cart_in *in, polar2cart_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg1 = new Image(cv::Mat());
+    Image *dstImg2 = new Image(cv::Mat());
+    cv::cartToPolar(img1->mat, img2->mat, dstImg1->mat, dstImg2->mat, in->angleInDegrees);
+    out->handle1 = dstImg1->id;
+    out->handle2 = dstImg2->id;
+}
+
+void cart2polar(SScriptCallBack *p, const char *cmd, cart2polar_in *in, cart2polar_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg1 = new Image(cv::Mat());
+    Image *dstImg2 = new Image(cv::Mat());
+    cv::cartToPolar(img1->mat, img2->mat, dstImg1->mat, dstImg2->mat, in->angleInDegrees);
+    out->handle1 = dstImg1->id;
+    out->handle2 = dstImg2->id;
+}
+
+void bitwiseAnd(SScriptCallBack *p, const char *cmd, bitwiseAnd_in *in, bitwiseAnd_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::bitwise_and(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void bitwiseAndK(SScriptCallBack *p, const char *cmd, bitwiseAndK_in *in, bitwiseAndK_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::bitwise_and(img->mat, in->k, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void bitwiseOr(SScriptCallBack *p, const char *cmd, bitwiseOr_in *in, bitwiseOr_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::bitwise_or(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void bitwiseOrK(SScriptCallBack *p, const char *cmd, bitwiseOrK_in *in, bitwiseOrK_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::bitwise_or(img->mat, in->k, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void bitwiseXor(SScriptCallBack *p, const char *cmd, bitwiseXor_in *in, bitwiseXor_out *out)
+{
+    Image *img1 = Image::byId(in->handle1);
+    if(!img1) throw std::runtime_error("invalid image 1 handle");
+    Image *img2 = Image::byId(in->handle2);
+    if(!img2) throw std::runtime_error("invalid image 2 handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::bitwise_xor(img1->mat, img2->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void bitwiseXorK(SScriptCallBack *p, const char *cmd, bitwiseXorK_in *in, bitwiseXorK_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::bitwise_xor(img->mat, in->k, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
+void bitwiseNot(SScriptCallBack *p, const char *cmd, bitwiseNot_in *in, bitwiseNot_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    Image *dstImg = new Image(cv::Mat());
+    cv::bitwise_not(img->mat, dstImg->mat);
+    out->handle = dstImg->id;
+}
+
 int parseDistanceType(int d, int def)
 {
     switch(d)
