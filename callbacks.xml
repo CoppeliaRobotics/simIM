@@ -241,6 +241,44 @@
         <return>
         </return>
     </command>
+    <command name="get">
+        <description>Get pixel at specified coordinate.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="x" type="int">
+                <description>x coordinate</description>
+            </param>
+            <param name="y" type="int">
+                <description>x coordinate</description>
+            </param>
+        </params>
+        <return>
+            <param name="value" type="table" item-type="float">
+                <description>value</description>
+            </param>
+        </return>
+    </command>
+    <command name="set">
+        <description>Set pixel at specified coordinate.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="x" type="int">
+                <description>x coordinate</description>
+            </param>
+            <param name="y" type="int">
+                <description>x coordinate</description>
+            </param>
+            <param name="value" type="table" item-type="float">
+                <description>value</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <enum name="interp" item-prefix="interp_" base="1200">
         <item name="nearest">
             <description>nearest-neighbor interpolation</description>

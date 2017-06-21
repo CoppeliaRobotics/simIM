@@ -243,6 +243,45 @@ void mixChannels(SScriptCallBack *p, const char *cmd, mixChannels_in *in, mixCha
     cv::mixChannels(&srcv[0], srcv.size(), &dstv[0], dstv.size(), &in->fromTo[0], in->fromTo.size());
 }
 
+void get(SScriptCallBack *p, const char *cmd, get_in *in, get_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    switch(img->mat.depth())
+    {
+    case CV_8U:
+        for(size_t i = 0; i < img->mat.channels(); i++)
+            out->value.push_back(img->mat.at<uchar>(in->x, in->y, i));
+        break;
+    case CV_32F:
+        for(size_t i = 0; i < img->mat.channels(); i++)
+            out->value.push_back(img->mat.at<float>(in->x, in->y, i));
+        break;
+    default:
+        throw std::runtime_error("unsupported channel type");
+    }
+}
+
+void set(SScriptCallBack *p, const char *cmd, set_in *in, set_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+    if(in->value.size() != img->mat.channels()) throw std::runtime_error("invalid pixel size");
+    switch(img->mat.depth())
+    {
+    case CV_8U:
+        for(size_t i = 0; i < img->mat.channels(); i++)
+            img->mat.at<uchar>(in->x, in->y, i) = in->value[i];
+        break;
+    case CV_32F:
+        for(size_t i = 0; i < img->mat.channels(); i++)
+            img->mat.at<float>(in->x, in->y, i) = in->value[i];
+        break;
+    default:
+        throw std::runtime_error("unsupported channel type");
+    }
+}
+
 int parseInterp(int i, int def)
 {
     switch(i)
