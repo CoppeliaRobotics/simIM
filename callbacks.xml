@@ -216,6 +216,22 @@
             </param>
         </return>
     </command>
+    <command name="mixChannels">
+        <description>Mix many single channel images into many multichannel images.</description>
+        <params>
+            <param name="inputHandles" type="table" item-type="int">
+                <description>handles to input images</description>
+            </param>
+            <param name="outputHandles" type="table" item-type="int">
+                <description>handles to output images</description>
+            </param>
+            <param name="fromTo" type="table" item-type="int">
+                <description>array of index pairs, i.e. {src1,dst1,src2,dst2,...,srcN,dstN}. see <a href="http://docs.opencv.org/2.4/modules/core/doc/operations_on_arrays.html#void%20mixChannels(const%20Mat*%20src,%20size_t%20nsrcs,%20Mat*%20dst,%20size_t%20ndsts,%20const%20int*%20fromTo,%20size_t%20npairs)">here</a> for details</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <enum name="interp" item-prefix="interp_" base="1200">
         <item name="nearest">
             <description>nearest-neighbor interpolation</description>

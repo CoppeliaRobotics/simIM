@@ -216,6 +216,25 @@ void merge(SScriptCallBack *p, const char *cmd, merge_in *in, merge_out *out)
     out->handle = img->id;
 }
 
+void mixChannels(SScriptCallBack *p, const char *cmd, mixChannels_in *in, mixChannels_out *out)
+{
+    std::vector<cv::Mat> srcv;
+    for(size_t i = 0; i < in->inputHandles.size(); i++)
+    {
+        Image *img = Image::byId(in->inputHandles[i]);
+        if(!img) throw std::runtime_error((boost::format("invalid input image %d handle") % i).str());
+        srcv.push_back(img->mat);
+    }
+    std::vector<cv::Mat> dstv;
+    for(size_t i = 0; i < in->outputHandles.size(); i++)
+    {
+        Image *img = Image::byId(in->outputHandles[i]);
+        if(!img) throw std::runtime_error((boost::format("invalid output image %d handle") % i).str());
+        dstv.push_back(img->mat);
+    }
+    cv::mixChannels(&srcv[0], srcv.size(), &dstv[0], dstv.size(), &in->fromTo[0], in->fromTo.size());
+}
+
 int parseInterp(int i, int def)
 {
     switch(i)
