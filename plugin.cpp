@@ -74,6 +74,12 @@ public:
         if(it == idMap.end()) return 0L;
         else return it->second;
     }
+
+    static void getAllIds(std::vector<int> &v)
+    {
+        for(std::map<int, Image*>::iterator it = idMap.begin(); it != idMap.end(); ++it)
+            v.push_back(it->first);
+    }
 };
 
 int Image::nextId = 1;
@@ -893,6 +899,11 @@ void distanceTransform(SScriptCallBack *p, const char *cmd, distanceTransform_in
     int ms = parseMaskSize(in->maskSize, CV_DIST_MASK_PRECISE);
     cv::distanceTransform(img->mat, dstImg->mat, dt, ms);
     out->handle = dstImg->id;
+}
+
+void handles(SScriptCallBack *p, const char *cmd, handles_in *in, handles_out *out)
+{
+    Image::getAllIds(out->handles);
 }
 
 class Plugin : public vrep::Plugin

@@ -302,9 +302,6 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="inPlace" type="bool" default="false">
-                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
-            </param>
             <param name="width" type="int">
                 <description>width of the new image</description>
             </param>
@@ -313,6 +310,9 @@
             </param>
             <param name="interpolation" type="int" default="sim_im_interp_linear">
                 <description>type of interpolation (see <enum-ref name="interp" />)</description>
+            </param>
+            <param name="inPlace" type="bool" default="false">
+                <description>if true, the original immage will be converted in place. otherwise, the original image will not be modified and a new image is returned.</description>
             </param>
         </params>
         <return>
@@ -1485,6 +1485,16 @@
         <return>
             <param name="handle" type="int">
                 <description>handle to image</description>
+            </param>
+        </return>
+    </command>
+    <command name="handles">
+        <description>Get all the active handles.</description>
+        <params>
+        </params>
+        <return>
+            <param name="handles" type="table" item-type="int">
+                <description>handles</description>
             </param>
         </return>
     </command>
