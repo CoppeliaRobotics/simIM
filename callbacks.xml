@@ -45,6 +45,28 @@
             </param>
         </return>
     </command>
+    <command name="createFromData">
+        <description>Create an image from given raw data</description>
+        <params>
+            <param name="width" type="int">
+                <description>width</description>
+            </param>
+            <param name="height" type="int">
+                <description>height</description>
+            </param>
+            <param name="data" type="string">
+                <description>image data</description>
+            </param>
+            <param name="format" type="int" default="sim_im_fmt_8UC3">
+                <description>image format (see <enum-ref name="format" />)</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+        </return>
+    </command>
     <command name="destroy">
         <description>Destroy (i.e.: free memory) an image with given handle</description>
         <params>

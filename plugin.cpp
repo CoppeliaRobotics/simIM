@@ -120,6 +120,17 @@ void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
     ))->id;
 }
 
+void createFromData(SScriptCallBack *p, const char *cmd, createFromData_in *in, createFromData_out *out)
+{
+    if(in->width <= 0) throw std::runtime_error("invalid width");
+    if(in->height <= 0) throw std::runtime_error("invalid height");
+    int format = parseFormat(in->format, CV_8UC3);
+    cv::Mat tmp(in->height, in->width, format, (void*)in->data.c_str());
+    Image *img = new Image(cv::Mat());
+    cv::cvtColor(tmp, img->mat, CV_RGB2BGR);
+    out->handle = img->id;
+}
+
 void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *out)
 {
     Image *img = Image::byId(in->handle);
