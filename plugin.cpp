@@ -666,9 +666,9 @@ int parseFlipOp(int o, int def)
     switch(o)
     {
     case sim_im_flipop_x:
-        return 0;
-    case sim_im_flipop_y:
         return 1;
+    case sim_im_flipop_y:
+        return 0;
     case sim_im_flipop_both:
         return -1;
     default:
