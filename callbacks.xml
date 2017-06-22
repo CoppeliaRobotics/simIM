@@ -1498,4 +1498,69 @@
             </param>
         </return>
     </command>
+    <command name="writeToVisionSensor">
+        <description>Write image to vision sensor. Make sure the vision sensor is flagged as <b>external input</b>.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>handle to image</description>
+            </param>
+            <param name="sensorHandle" type="int">
+                <description>handle to vision sensor</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="readFromVisionSensor">
+        <description>Read image from vision sensor.</description>
+        <params>
+            <param name="sensorHandle" type="int">
+                <description>handle to vision sensor</description>
+            </param>
+            <param name="handle" type="int" default="-1">
+                <description>handle to existing image, or -1 to create and return a new image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to new image (or existing image if given)</description>
+            </param>
+        </return>
+    </command>
+    <command name="openVideoCapture">
+        <description>Open video capture device.</description>
+        <params>
+            <param name="deviceIndex" type="int">
+                <description>device index (0 based)</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="closeVideoCapture">
+        <description>Close video capture device.</description>
+        <params>
+            <param name="deviceIndex" type="int">
+                <description>device index (0 based)</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="readFromVideoCapture">
+        <description>Read frame from video capture device.</description>
+        <params>
+            <param name="deviceIndex" type="int">
+                <description>device index (0 based)</description>
+            </param>
+            <param name="handle" type="int" default="-1">
+                <description>handle to existing image, or -1 to create and return a new image</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int">
+                <description>handle to new image (or existing image if given)</description>
+            </param>
+        </return>
+    </command>
 </plugin>

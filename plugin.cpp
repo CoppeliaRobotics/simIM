@@ -40,6 +40,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
+std::map<int, cv::VideoCapture> videoCapture;
+
 //#define SIMD_OPENCV_ENABLE
 //#include <Simd/SimdLib.hpp>
 
@@ -901,6 +903,92 @@ void distanceTransform(SScriptCallBack *p, const char *cmd, distanceTransform_in
 void handles(SScriptCallBack *p, const char *cmd, handles_in *in, handles_out *out)
 {
     Image::getAllIds(out->handles);
+}
+
+void writeToVisionSensor(SScriptCallBack *p, const char *cmd, writeToVisionSensor_in *in, writeToVisionSensor_out *out)
+{
+    Image *img = Image::byId(in->handle);
+    if(!img) throw std::runtime_error("invalid image handle");
+
+    simInt resolution[2];
+    if(-1 == simGetVisionSensorResolution(in->sensorHandle, &resolution[0]))
+        throw std::runtime_error("failed to get sensor resolution");
+
+    if(img->mat.cols != resolution[0] || img->mat.rows != resolution[1])
+        throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->mat.cols % img->mat.rows).str());
+
+    cv::Mat tmp;
+    cv::cvtColor(img->mat, tmp, CV_BGR2RGB);
+    if(-1 == simSetVisionSensorCharImage(in->sensorHandle, (const simUChar*)tmp.data))
+        throw std::runtime_error("failed to write to vision sensor");
+}
+
+void readFromVisionSensor(SScriptCallBack *p, const char *cmd, readFromVisionSensor_in *in, readFromVisionSensor_out *out)
+{
+    simInt resolution[2];
+    if(-1 == simGetVisionSensorResolution(in->sensorHandle, &resolution[0]))
+        throw std::runtime_error("failed to get sensor resolution");
+
+    Image *img = in->handle != -1 ? Image::byId(in->handle) : new Image(cv::Mat::zeros(resolution[1], resolution[0], CV_8UC3));
+    if(!img) throw std::runtime_error("invalid image handle");
+
+    if(img->mat.cols != resolution[0] || img->mat.rows != resolution[1])
+        throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->mat.cols % img->mat.rows).str());
+
+    simUChar* data = simGetVisionSensorCharImage(in->sensorHandle, &resolution[0], &resolution[1]);
+    if(data)
+    {
+        cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(img->mat);
+        out->handle = img->id;
+    }
+    else
+    {
+        if(in->handle == -1) delete img;
+        out->handle = -1;
+        throw std::runtime_error("failed to read from vision sensor");
+    }
+}
+
+void openVideoCapture(SScriptCallBack *p, const char *cmd, openVideoCapture_in *in, openVideoCapture_out *out)
+{
+    if(!videoCapture[in->deviceIndex].isOpened())
+        videoCapture[in->deviceIndex].open(in->deviceIndex);
+
+    if(!videoCapture[in->deviceIndex].isOpened())
+        throw std::runtime_error("failed to open device");
+}
+
+void closeVideoCapture(SScriptCallBack *p, const char *cmd, closeVideoCapture_in *in, closeVideoCapture_out *out)
+{
+    std::map<int, cv::VideoCapture>::iterator it = videoCapture.find(in->deviceIndex);
+    if(it == videoCapture.end())
+        throw std::runtime_error("invalid device. did you call simIM.openVideoCapture() first?");
+
+    if(!videoCapture[in->deviceIndex].isOpened())
+        throw std::runtime_error("device is not opened");
+
+    videoCapture[in->deviceIndex].release();
+}
+
+void readFromVideoCapture(SScriptCallBack *p, const char *cmd, readFromVideoCapture_in *in, readFromVideoCapture_out *out)
+{
+    std::map<int, cv::VideoCapture>::iterator it = videoCapture.find(in->deviceIndex);
+    if(it == videoCapture.end() || !videoCapture[in->deviceIndex].isOpened())
+        throw std::runtime_error("invalid device. did you call simIM.openVideoCapture() first?");
+
+    Image *img = in->handle != -1 ? Image::byId(in->handle) : new Image(cv::Mat());
+    if(!img) throw std::runtime_error("invalid image handle");
+
+    if(videoCapture[in->deviceIndex].read(img->mat))
+    {
+        out->handle = img->id;
+    }
+    else
+    {
+        if(in->handle == -1) delete img;
+        out->handle = -1;
+        throw std::runtime_error("failed to read video frame");
+    }
 }
 
 class Plugin : public vrep::Plugin
