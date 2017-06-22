@@ -40,8 +40,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-#define SIMD_OPENCV_ENABLE
-#include <Simd/SimdLib.hpp>
+//#define SIMD_OPENCV_ENABLE
+//#include <Simd/SimdLib.hpp>
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
