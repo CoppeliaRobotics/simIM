@@ -44,6 +44,7 @@
 #include <Simd/SimdLib.hpp>
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
 class Image
@@ -257,11 +258,11 @@ void get(SScriptCallBack *p, const char *cmd, get_in *in, get_out *out)
     {
     case CV_8U:
         for(size_t i = 0; i < img->mat.channels(); i++)
-            out->value.push_back(img->mat.at<uchar>(in->x, in->y, i));
+            out->value.push_back(img->mat.at<cv::Vec3b>(in->y, in->x)[i]);
         break;
     case CV_32F:
         for(size_t i = 0; i < img->mat.channels(); i++)
-            out->value.push_back(img->mat.at<float>(in->x, in->y, i));
+            out->value.push_back(img->mat.at<cv::Vec3f>(in->y, in->x)[i]);
         break;
     default:
         throw std::runtime_error("unsupported channel type");
@@ -277,11 +278,11 @@ void set(SScriptCallBack *p, const char *cmd, set_in *in, set_out *out)
     {
     case CV_8U:
         for(size_t i = 0; i < img->mat.channels(); i++)
-            img->mat.at<uchar>(in->x, in->y, i) = in->value[i];
+            img->mat.at<cv::Vec3b>(in->y, in->x)[i] = in->value[i];
         break;
     case CV_32F:
         for(size_t i = 0; i < img->mat.channels(); i++)
-            img->mat.at<float>(in->x, in->y, i) = in->value[i];
+            img->mat.at<cv::Vec3f>(in->y, in->x)[i] = in->value[i];
         break;
     default:
         throw std::runtime_error("unsupported channel type");
