@@ -384,8 +384,6 @@ void polylines(SScriptCallBack *p, const char *cmd, polylines_in *in, polylines_
         pt += in->numPoints[i];
     }
     cv::polylines(img->mat, pts, &in->numPoints[0], in->numPoints.size(), in->isClosed, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
-    for(size_t i = 0; i < in->numPoints.size(); i++)
-        delete[] pts[i];
     delete[] pts;
 }
 
@@ -428,8 +426,6 @@ void fillPoly(SScriptCallBack *p, const char *cmd, fillPoly_in *in, fillPoly_out
         pt += in->numPoints[i];
     }
     cv::fillPoly(img->mat, pts, &in->numPoints[0], in->numPoints.size(), CV_RGB(in->r, in->g, in->b), in->type, in->shift, cv::Point(in->ox, in->oy));
-    for(size_t i = 0; i < in->numPoints.size(); i++)
-        delete[] pts[i];
     delete[] pts;
 }
 
