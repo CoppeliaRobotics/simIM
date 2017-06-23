@@ -4,6 +4,8 @@ project(v_repExtImage)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_MACOSX_RPATH 1)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
+
 find_package(Boost COMPONENTS thread REQUIRED)
 find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)
 
