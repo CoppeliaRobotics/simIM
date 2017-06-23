@@ -15,7 +15,7 @@ y=0
 for k,v in pairs(simIM.fontFace) do
     w1,h1,bl=simIM.textSize(text(k),v,false)
     y=y+h1
-    simIM.text(im,text(k),0,y,v,false)
+    simIM.text(im,text(k),{0,y},{255,255,255},v,false,1)
     y=y+bl+lineSpacing
 end
 

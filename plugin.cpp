@@ -88,6 +88,33 @@ public:
 int Image::nextId = 1;
 std::map<int, Image*> Image::idMap;
 
+cv::Point asPoint(const std::vector<int> &v)
+{
+    return cv::Point(v[0], v[1]);
+}
+
+cv::Size asSize(const std::vector<int> &v)
+{
+    return cv::Size(v[0], v[1]);
+}
+
+cv::Rect asRect(const std::vector<int> &p, const std::vector<int> &sz)
+{
+    return cv::Rect(p[0], p[1], sz[0], sz[1]);
+}
+
+cv::Scalar asRGB(const std::vector<int> &v)
+{
+    return CV_RGB(v[0], v[1], v[2]);
+}
+
+void toVector(const cv::Point &p, std::vector<int> &v)
+{
+    v.resize(2);
+    v[0] = p.x;
+    v[1] = p.y;
+}
+
 int parseFormat(int f, int def)
 {
     switch(f)
@@ -271,11 +298,11 @@ void get(SScriptCallBack *p, const char *cmd, get_in *in, get_out *out)
     {
     case CV_8U:
         for(size_t i = 0; i < img->mat.channels(); i++)
-            out->value.push_back(img->mat.at<cv::Vec3b>(in->y, in->x)[i]);
+            out->value.push_back(img->mat.at<cv::Vec3b>(in->coord[1], in->coord[0])[i]);
         break;
     case CV_32F:
         for(size_t i = 0; i < img->mat.channels(); i++)
-            out->value.push_back(img->mat.at<cv::Vec3f>(in->y, in->x)[i]);
+            out->value.push_back(img->mat.at<cv::Vec3f>(in->coord[1], in->coord[0])[i]);
         break;
     default:
         throw std::runtime_error("unsupported channel type");
@@ -291,11 +318,11 @@ void set(SScriptCallBack *p, const char *cmd, set_in *in, set_out *out)
     {
     case CV_8U:
         for(size_t i = 0; i < img->mat.channels(); i++)
-            img->mat.at<cv::Vec3b>(in->y, in->x)[i] = in->value[i];
+            img->mat.at<cv::Vec3b>(in->coord[1], in->coord[0])[i] = in->value[i];
         break;
     case CV_32F:
         for(size_t i = 0; i < img->mat.channels(); i++)
-            img->mat.at<cv::Vec3f>(in->y, in->x)[i] = in->value[i];
+            img->mat.at<cv::Vec3f>(in->coord[1], in->coord[0])[i] = in->value[i];
         break;
     default:
         throw std::runtime_error("unsupported channel type");
@@ -336,20 +363,21 @@ void size(SScriptCallBack *p, const char *cmd, size_in *in, size_out *out)
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
-    out->width = img->mat.cols;
-    out->height = img->mat.rows;
+    out->size.resize(2);
+    out->size[0] = img->mat.cols;
+    out->size[1] = img->mat.rows;
 }
 
 void copy(SScriptCallBack *p, const char *cmd, copy_in *in, copy_out *out)
 {
-    if(in->width <= 0) throw std::runtime_error("invalid width");
-    if(in->height <= 0) throw std::runtime_error("invalid height");
+    if(in->size[0] <= 0) throw std::runtime_error("invalid width");
+    if(in->size[1] <= 0) throw std::runtime_error("invalid height");
     Image *srcImg = Image::byId(in->srcHandle);
     if(!srcImg) throw std::runtime_error("invalid source image handle");
     Image *dstImg = Image::byId(in->dstHandle);
     if(!dstImg) throw std::runtime_error("invalid destination image handle");
-    cv::Mat src = srcImg->mat(cv::Rect(in->srcx, in->srcy, in->width, in->height));
-    cv::Mat dst = dstImg->mat(cv::Rect(in->dstx, in->dsty, in->width, in->height));
+    cv::Mat src = srcImg->mat(asRect(in->srcOffset, in->size));
+    cv::Mat dst = dstImg->mat(asRect(in->dstOffset, in->size));
     src.copyTo(dst);
 }
 
@@ -357,26 +385,24 @@ void clipLine(SScriptCallBack *p, const char *cmd, clipLine_in *in, clipLine_out
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
-    cv::Point p1(in->x1, in->y1), p2(in->x2, in->y2);
+    cv::Point p1(asPoint(in->p1)), p2(asPoint(in->p2));
     out->valid = cv::clipLine(cv::Rect(0, 0, img->mat.cols, img->mat.rows), p1, p2);
-    out->x1 = p1.x;
-    out->y1 = p1.y;
-    out->x2 = p2.x;
-    out->y2 = p2.y;
+    toVector(p1, out->p1);
+    toVector(p2, out->p2);
 }
 
 void line(SScriptCallBack *p, const char *cmd, line_in *in, line_out *out)
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
-    cv::line(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+    cv::line(img->mat, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift);
 }
 
 void arrowedLine(SScriptCallBack *p, const char *cmd, arrowedLine_in *in, arrowedLine_out *out)
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
-    cv::arrowedLine(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift, in->tipLength);
+    cv::arrowedLine(img->mat, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift, in->tipLength);
 }
 
 void polylines(SScriptCallBack *p, const char *cmd, polylines_in *in, polylines_out *out)
@@ -396,7 +422,7 @@ void polylines(SScriptCallBack *p, const char *cmd, polylines_in *in, polylines_
         pts[i] = pt;
         pt += in->numPoints[i];
     }
-    cv::polylines(img->mat, pts, &in->numPoints[0], in->numPoints.size(), in->isClosed, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+    cv::polylines(img->mat, pts, &in->numPoints[0], in->numPoints.size(), in->isClosed, asRGB(in->color), in->thickness, in->type, in->shift);
     delete[] pts;
 }
 
@@ -404,21 +430,21 @@ void rectangle(SScriptCallBack *p, const char *cmd, rectangle_in *in, rectangle_
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
-    cv::rectangle(img->mat, cv::Point(in->x1, in->y1), cv::Point(in->x2, in->y2), CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+    cv::rectangle(img->mat, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift);
 }
 
 void circle(SScriptCallBack *p, const char *cmd, circle_in *in, circle_out *out)
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
-    cv::circle(img->mat, cv::Point(in->cx, in->cy), in->radius, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+    cv::circle(img->mat, asPoint(in->center), in->radius, asRGB(in->color), in->thickness, in->type, in->shift);
 }
 
 void ellipse(SScriptCallBack *p, const char *cmd, ellipse_in *in, ellipse_out *out)
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
-    cv::ellipse(img->mat, cv::Point(in->cx, in->cy), cv::Size(in->rx, in->ry), in->angle, in->startAngle, in->endAngle, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->shift);
+    cv::ellipse(img->mat, asPoint(in->center), asSize(in->radius), in->angle, in->startAngle, in->endAngle, asRGB(in->color), in->thickness, in->type, in->shift);
 }
 
 void fillPoly(SScriptCallBack *p, const char *cmd, fillPoly_in *in, fillPoly_out *out)
@@ -438,7 +464,7 @@ void fillPoly(SScriptCallBack *p, const char *cmd, fillPoly_in *in, fillPoly_out
         pts[i] = pt;
         pt += in->numPoints[i];
     }
-    cv::fillPoly(img->mat, pts, &in->numPoints[0], in->numPoints.size(), CV_RGB(in->r, in->g, in->b), in->type, in->shift, cv::Point(in->ox, in->oy));
+    cv::fillPoly(img->mat, pts, &in->numPoints[0], in->numPoints.size(), asRGB(in->color), in->type, in->shift, asPoint(in->offset));
     delete[] pts;
 }
 
@@ -449,7 +475,7 @@ void fillConvexPoly(SScriptCallBack *p, const char *cmd, fillConvexPoly_in *in, 
     std::vector<cv::Point> points;
     for(size_t i = 0; i < in->points.size(); i += 2)
         points.push_back(cv::Point(in->points[i], in->points[i+1]));
-    cv::fillConvexPoly(img->mat, &points[0], points.size(), CV_RGB(in->r, in->g, in->b), in->type, in->shift);
+    cv::fillConvexPoly(img->mat, &points[0], points.size(), asRGB(in->color), in->type, in->shift);
 }
 
 int parseFontFace(int f, int def)
@@ -482,7 +508,7 @@ void text(SScriptCallBack *p, const char *cmd, text_in *in, text_out *out)
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     int ff = parseFontFace(in->fontFace, cv::FONT_HERSHEY_SIMPLEX) | (in->italic ? cv::FONT_ITALIC : 0);
-    cv::putText(img->mat, in->str, cv::Point(in->x, in->y), ff, in->fontScale, CV_RGB(in->r, in->g, in->b), in->thickness, in->type, in->bottomLeftOrigin);
+    cv::putText(img->mat, in->str, asPoint(in->pos), ff, in->fontScale, asRGB(in->color), in->thickness, in->type, in->bottomLeftOrigin);
 }
 
 void textSize(SScriptCallBack *p, const char *cmd, textSize_in *in, textSize_out *out)
