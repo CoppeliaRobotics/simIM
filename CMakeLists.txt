@@ -9,6 +9,11 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 find_package(Boost COMPONENTS thread REQUIRED)
 find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)
 
+if(${OpenCV_VERSION} VERSION_GREATER 3.0.0)
+    # since opencv3, imread is in the imgcodecs module, VideoCapture in videoio
+    find_package(OpenCV COMPONENTS imgcodecs videoio REQUIRED)
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 find_package(VREP REQUIRED)
 #find_package(SIMD REQUIRED)
