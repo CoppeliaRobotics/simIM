@@ -403,7 +403,7 @@ void arrowedLine(SScriptCallBack *p, const char *cmd, arrowedLine_in *in, arrowe
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
-#if HAVE_CV_ARROWEDLINE
+#ifdef HAVE_CV_ARROWEDLINE
     cv::arrowedLine(img->mat, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift, in->tipLength);
 #else
     throw std::runtime_error("cv::arrowedLine not available in current version of OpenCV");
