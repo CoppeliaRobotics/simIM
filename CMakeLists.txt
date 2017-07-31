@@ -27,6 +27,24 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 vrep_generate_stubs(${CMAKE_BINARY_DIR}/generated XML_FILE ${CMAKE_SOURCE_DIR}/callbacks.xml LUA_FILE ${CMAKE_SOURCE_DIR}/simExtImage.lua)
 
+include(CheckCXXSourceCompiles)
+set(CMAKE_REQUIRED_INCLUDES ${OpenCV_INCLUDE_DIRS})
+set(CMAKE_REQUIRED_LIBRARIES ${OpenCV_LIBS})
+check_cxx_source_compiles("
+#include <opencv2/core/core.hpp>
+int main() {
+    cv::Mat im(100, 100, CV_8UC1);
+    cv::arrowedLine(im, cv::Point(10, 20), cv::Point(50, 90), cv::Scalar(100));
+}
+" TEST_CV_ARROWEDLINE_PASSED)
+if(TEST_CV_ARROWEDLINE_PASSED)
+    set(HAVE_CV_ARROWEDLINE 1)
+else()
+    set(HAVE_CV_ARROWEDLINE 0)
+endif()
+
+configure_file(${CMAKE_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/config.h)
+
 set(SOURCES plugin.cpp)
 add_library(v_repExtImage SHARED ${SOURCES} "${CMAKE_BINARY_DIR}/generated/stubs.cpp" "${VREP_EXPORTED_SOURCES}" "${CMAKE_SOURCE_DIR}/external/v_repPlusPlus/Plugin.cpp")
 #target_link_libraries(v_repExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${VREP_LIBRARIES} ${SIMD_LIBRARIES})

@@ -35,10 +35,11 @@
 #include "v_repPlusPlus/Plugin.h"
 #include "plugin.h"
 #include "stubs.h"
+#include "config.h"
 
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 std::map<int, cv::VideoCapture> videoCapture;
 
@@ -402,7 +403,11 @@ void arrowedLine(SScriptCallBack *p, const char *cmd, arrowedLine_in *in, arrowe
 {
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
+#if HAVE_CV_ARROWEDLINE
     cv::arrowedLine(img->mat, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift, in->tipLength);
+#else
+    throw std::runtime_error("cv::arrowedLine not available in current version of OpenCV");
+#endif
 }
 
 void polylines(SScriptCallBack *p, const char *cmd, polylines_in *in, polylines_out *out)
