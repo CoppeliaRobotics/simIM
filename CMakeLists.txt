@@ -49,3 +49,6 @@ set(SOURCES plugin.cpp)
 add_library(v_repExtImage SHARED ${SOURCES} "${CMAKE_BINARY_DIR}/generated/stubs.cpp" "${VREP_EXPORTED_SOURCES}" "${CMAKE_SOURCE_DIR}/external/v_repPlusPlus/Plugin.cpp")
 #target_link_libraries(v_repExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${VREP_LIBRARIES} ${SIMD_LIBRARIES})
 target_link_libraries(v_repExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${VREP_LIBRARIES})
+
+install(TARGETS v_repExtImage DESTINATION ${VREP_ROOT})
+
