@@ -946,12 +946,16 @@ void readFromVisionSensor(SScriptCallBack *p, const char *cmd, readFromVisionSen
     if(!img) throw std::runtime_error("invalid image handle");
 
     if(img->mat.cols != resolution[0] || img->mat.rows != resolution[1])
+    {
+        if(in->handle == -1) delete img;
         throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->mat.cols % img->mat.rows).str());
+    }
 
     simUChar* data = simGetVisionSensorCharImage(in->sensorHandle, &resolution[0], &resolution[1]);
     if(data)
     {
         cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(img->mat);
+        simReleaseBuffer(reinterpret_cast<simChar*>(data));
         out->handle = img->id;
     }
     else
