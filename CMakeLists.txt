@@ -15,7 +15,7 @@ if(${OpenCV_VERSION} VERSION_GREATER 3.0.0)
 endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-find_package(VREP REQUIRED)
+find_package(VREP 3.5.0 REQUIRED)
 #find_package(SIMD REQUIRED)
 
 include_directories(${VREP_INCLUDE})
