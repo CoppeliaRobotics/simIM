@@ -126,7 +126,7 @@ void createFromData(SScriptCallBack *p, const char *cmd, createFromData_in *in, 
     int format = parseFormat(in->format, CV_8UC3);
     cv::Mat tmp(in->height, in->width, format, (void*)in->data.c_str());
     Image *img = new Image(cv::Mat());
-    cv::cvtColor(tmp, img->mat, CV_RGB2BGR);
+    cv::cvtColor(tmp, img->mat, cv::COLOR_RGB2BGR);
     out->handle = img->id;
 }
 
@@ -139,7 +139,7 @@ void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *o
 
 void read(SScriptCallBack *p, const char *cmd, read_in *in, read_out *out)
 {
-    cv::Mat mat = cv::imread(in->filename, CV_LOAD_IMAGE_COLOR);
+    cv::Mat mat = cv::imread(in->filename, cv::IMREAD_COLOR);
     if(!mat.data) throw std::runtime_error("invalid image");
     out->handle = (new Image(mat))->id;
 }
@@ -166,7 +166,7 @@ void rgb2gray(SScriptCallBack *p, const char *cmd, rgb2gray_in *in, rgb2gray_out
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-    cv::cvtColor(img->mat, dstImg->mat, CV_RGB2GRAY);
+    cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_RGB2GRAY);
     out->handle = dstImg->id;
 }
 
@@ -175,7 +175,7 @@ void gray2rgb(SScriptCallBack *p, const char *cmd, gray2rgb_in *in, gray2rgb_out
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-    cv::cvtColor(img->mat, dstImg->mat, CV_GRAY2RGB);
+    cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_GRAY2RGB);
     out->handle = dstImg->id;
 }
 
@@ -184,7 +184,7 @@ void rgb2hsv(SScriptCallBack *p, const char *cmd, rgb2hsv_in *in, rgb2hsv_out *o
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-    cv::cvtColor(img->mat, dstImg->mat, CV_RGB2HSV);
+    cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_RGB2HSV);
     out->handle = dstImg->id;
 }
 
@@ -193,7 +193,7 @@ void hsv2rgb(SScriptCallBack *p, const char *cmd, hsv2rgb_in *in, hsv2rgb_out *o
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-    cv::cvtColor(img->mat, dstImg->mat, CV_HSV2RGB);
+    cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_HSV2RGB);
     out->handle = dstImg->id;
 }
 
@@ -202,7 +202,7 @@ void rgb2hls(SScriptCallBack *p, const char *cmd, rgb2hls_in *in, rgb2hls_out *o
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-    cv::cvtColor(img->mat, dstImg->mat, CV_RGB2HLS);
+    cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_RGB2HLS);
     out->handle = dstImg->id;
 }
 
@@ -211,7 +211,7 @@ void hls2rgb(SScriptCallBack *p, const char *cmd, hls2rgb_in *in, hls2rgb_out *o
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-    cv::cvtColor(img->mat, dstImg->mat, CV_HLS2RGB);
+    cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_HLS2RGB);
     out->handle = dstImg->id;
 }
 
@@ -643,13 +643,13 @@ int parseReduceOp(int o, int def)
     switch(o)
     {
     case sim_im_reduceop_sum:
-        return CV_REDUCE_SUM;
+        return cv::REDUCE_SUM;
     case sim_im_reduceop_avg:
-        return CV_REDUCE_AVG;
+        return cv::REDUCE_AVG;
     case sim_im_reduceop_max:
-        return CV_REDUCE_MAX;
+        return cv::REDUCE_MAX;
     case sim_im_reduceop_min:
-        return CV_REDUCE_MIN;
+        return cv::REDUCE_MIN;
     default:
         return def;
     }
@@ -660,7 +660,7 @@ void reduce(SScriptCallBack *p, const char *cmd, reduce_in *in, reduce_out *out)
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-    int op = parseReduceOp(in->op, CV_REDUCE_SUM);
+    int op = parseReduceOp(in->op, cv::REDUCE_SUM);
     cv::reduce(img->mat, dstImg->mat, in->dim, op);
     out->handle = dstImg->id;
 }
@@ -879,11 +879,11 @@ int parseDistanceType(int d, int def)
     switch(d)
     {
     case sim_im_dist_L1:
-        return CV_DIST_L1;
+        return cv::DIST_L1;
     case sim_im_dist_L2:
-        return CV_DIST_L2;
+        return cv::DIST_L2;
     case sim_im_dist_C:
-        return CV_DIST_C;
+        return cv::DIST_C;
     }
     return def;
 }
@@ -897,7 +897,7 @@ int parseMaskSize(int m, int def)
     case sim_im_masksize_5x5:
         return 5;
     case sim_im_masksize_precise:
-        return CV_DIST_MASK_PRECISE;
+        return cv::DIST_MASK_PRECISE;
     }
     return def;
 }
@@ -907,8 +907,8 @@ void distanceTransform(SScriptCallBack *p, const char *cmd, distanceTransform_in
     Image *img = Image::byId(in->handle);
     if(!img) throw std::runtime_error("invalid image handle");
     Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-    int dt = parseDistanceType(in->distanceType, CV_DIST_L2);
-    int ms = parseMaskSize(in->maskSize, CV_DIST_MASK_PRECISE);
+    int dt = parseDistanceType(in->distanceType, cv::DIST_L2);
+    int ms = parseMaskSize(in->maskSize, cv::DIST_MASK_PRECISE);
     cv::distanceTransform(img->mat, dstImg->mat, dt, ms);
     out->handle = dstImg->id;
 }
@@ -931,7 +931,7 @@ void writeToVisionSensor(SScriptCallBack *p, const char *cmd, writeToVisionSenso
         throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->mat.cols % img->mat.rows).str());
 
     cv::Mat tmp;
-    cv::cvtColor(img->mat, tmp, CV_BGR2RGB);
+    cv::cvtColor(img->mat, tmp, cv::COLOR_BGR2RGB);
     if(-1 == simSetVisionSensorCharImage(in->sensorHandle, (const simUChar*)tmp.data))
         throw std::runtime_error("failed to write to vision sensor");
 }
