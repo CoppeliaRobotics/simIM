@@ -955,6 +955,7 @@ void readFromVisionSensor(SScriptCallBack *p, const char *cmd, readFromVisionSen
     if(data)
     {
         cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(img->mat);
+        cv::cvtColor(img->mat, img->mat, cv::COLOR_RGB2BGR);
         simReleaseBuffer(reinterpret_cast<simChar*>(data));
         out->handle = img->id;
     }
