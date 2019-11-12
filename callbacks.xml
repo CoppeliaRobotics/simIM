@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="callbacks.xsl"?>
 
 <plugin name="Image" short-name="IM" author="federico.ferri.it@gmail.com">
-    <description>Plugin for processing images in V-REP</description>
+    <description>Plugin for processing images</description>
     <enum name="format" item-prefix="fmt" base="3600">
         <item name="_8UC1">
             <description>1 channel, 8 bit unsigned int</description>

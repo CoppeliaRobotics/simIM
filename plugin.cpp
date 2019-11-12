@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "v_repPlusPlus/Plugin.h"
+#include "simPlusPlus/Plugin.h"
 #include "plugin.h"
 #include "stubs.h"
 #include "config.h"
@@ -20,6 +20,35 @@ std::map<int, cv::VideoCapture> videoCapture;
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+
+#if CV_VERSION_MAJOR < 3
+namespace cv
+{
+    enum ReduceTypes
+    {
+        REDUCE_SUM = CV_REDUCE_SUM,
+        REDUCE_AVG = CV_REDUCE_AVG,
+        REDUCE_MIN = CV_REDUCE_MIN,
+        REDUCE_MAX = CV_REDUCE_MAX
+    };
+    enum DistanceTypes
+    {
+        DIST_USER   = CV_DIST_USER,
+        DIST_L1     = CV_DIST_L1,
+        DIST_L2     = CV_DIST_L2,
+        DIST_C      = CV_DIST_C,
+        DIST_L12    = CV_DIST_L12,
+        DIST_FAIR   = CV_DIST_FAIR,
+        DIST_WELSCH = CV_DIST_WELSCH,
+        DIST_HUBER  = CV_DIST_HUBER
+    };
+    enum DistanceTransformMasks {
+        DIST_MASK_3       = CV_DIST_MASK_3,
+        DIST_MASK_5       = CV_DIST_MASK_5,
+        DIST_MASK_PRECISE = CV_DIST_MASK_PRECISE
+    };
+}
+#endif
 
 class Image
 {
@@ -1009,7 +1038,7 @@ void readFromVideoCapture(SScriptCallBack *p, const char *cmd, readFromVideoCapt
     }
 }
 
-class Plugin : public vrep::Plugin
+class Plugin : public sim::Plugin
 {
 public:
     void onStart()
@@ -1022,4 +1051,4 @@ public:
     }
 };
 
-VREP_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)
+SIM_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)

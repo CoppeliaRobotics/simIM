@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(v_repExtImage)
+project(simExtImage)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_MACOSX_RPATH 1)
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 find_package(Boost COMPONENTS thread REQUIRED)
 find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)
@@ -15,21 +13,28 @@ if(${OpenCV_VERSION} VERSION_GREATER 3.0.0)
     find_package(OpenCV COMPONENTS imgcodecs videoio REQUIRED)
 endif()
 
+if(NOT LIBPLUGIN_DIR)
+    if(DEFINED ENV{COPPELIASIM_ROOT_DIR})
+        set(LIBPLUGIN_DIR $ENV{COPPELIASIM_ROOT_DIR}/programming/libPlugin)
+    else()
+        set(LIBPLUGIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libPlugin)
+    endif()
+endif()
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CoppeliaRobotics-modules)
-find_package(VREP 3.5.0 REQUIRED)
+    ${LIBPLUGIN_DIR}/cmake)
+find_package(CoppeliaSim 4.0.0.0 REQUIRED)
 #find_package(SIMD REQUIRED)
 
-include_directories(${VREP_INCLUDE})
+include_directories(${COPPELIASIM_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/generated)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OpenCV_INCLUDE_DIRS})
 #include_directories(${SIMD_INCLUDE})
 
-vrep_generate_stubs(${CMAKE_CURRENT_BINARY_DIR}/generated XML_FILE ${CMAKE_CURRENT_SOURCE_DIR}/callbacks.xml LUA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/simExtImage.lua)
+coppeliasim_generate_stubs(${CMAKE_CURRENT_BINARY_DIR}/generated XML_FILE ${CMAKE_CURRENT_SOURCE_DIR}/callbacks.xml LUA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/simExtImage.lua)
 
 include(CheckCXXSourceCompiles)
 set(CMAKE_REQUIRED_INCLUDES ${OpenCV_INCLUDE_DIRS})
@@ -50,9 +55,9 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 set(SOURCES plugin.cpp)
-add_library(v_repExtImage SHARED ${SOURCES} "${CMAKE_CURRENT_BINARY_DIR}/generated/stubs.cpp" "${VREP_EXPORTED_SOURCES}" "${CMAKE_CURRENT_SOURCE_DIR}/external/v_repPlusPlus/Plugin.cpp")
-#target_link_libraries(v_repExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${VREP_LIBRARIES} ${SIMD_LIBRARIES})
-target_link_libraries(v_repExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${VREP_LIBRARIES})
+add_library(simExtImage SHARED ${SOURCES} ${COPPELIASIM_EXPORTED_SOURCES})
+#target_link_libraries(simExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${COPPELIASIM_LIBRARIES} ${SIMD_LIBRARIES})
+target_link_libraries(simExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${COPPELIASIM_LIBRARIES})
 
-install(TARGETS v_repExtImage DESTINATION ${VREP_ROOT})
+install(TARGETS simExtImage DESTINATION ${COPPELIASIM_ROOT_DIR})
 
