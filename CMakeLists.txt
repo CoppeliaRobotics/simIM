@@ -59,5 +59,5 @@ add_library(simExtImage SHARED ${SOURCES} ${COPPELIASIM_EXPORTED_SOURCES})
 #target_link_libraries(simExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${COPPELIASIM_LIBRARIES} ${SIMD_LIBRARIES})
 target_link_libraries(simExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${COPPELIASIM_LIBRARIES})
 
-install(TARGETS simExtImage DESTINATION ${COPPELIASIM_ROOT_DIR})
+install(TARGETS simExtImage DESTINATION ${COPPELIASIM_PLUGINS_DIR})
 
