@@ -269,7 +269,7 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="coord" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="coord" type="table" item-type="int" size="2">
                 <description>x, y coordinates</description>
             </param>
         </params>
@@ -285,7 +285,7 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="coord" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="coord" type="table" item-type="int" size="2">
                 <description>x, y coordinates</description>
             </param>
             <param name="value" type="table" item-type="float">
@@ -345,7 +345,7 @@
             </param>
         </params>
         <return>
-            <param name="size" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="size" type="table" item-type="int" size="2">
                 <description>size (width, height) of the image</description>
             </param>
         </return>
@@ -356,16 +356,16 @@
             <param name="srcHandle" type="int">
                 <description>handle to source image</description>
             </param>
-            <param name="srcOffset" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="srcOffset" type="table" item-type="int" size="2">
                 <description>x, y offset in the source image</description>
             </param>
             <param name="dstHandle" type="int">
                 <description>handle to destination image</description>
             </param>
-            <param name="dstOffset" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="dstOffset" type="table" item-type="int" size="2">
                 <description>x, y offset in the destination image</description>
             </param>
-            <param name="size" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="size" type="table" item-type="int" size="2">
                 <description>size (width, height) of the copied region</description>
             </param>
         </params>
@@ -378,10 +378,10 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="p1" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p1" type="table" item-type="int" size="2">
                 <description>x, y coordinates of first point</description>
             </param>
-            <param name="p2" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p2" type="table" item-type="int" size="2">
                 <description>x, y coordinates of second point</description>
             </param>
         </params>
@@ -389,10 +389,10 @@
             <param name="valid" type="bool">
                 <description>false if the line segment is completely outside the image rectangle, otherwise true.</description>
             </param>
-            <param name="p1" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p1" type="table" item-type="int" size="2">
                 <description>x, y coordinates of first point</description>
             </param>
-            <param name="p2" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p2" type="table" item-type="int" size="2">
                 <description>x, y coordinates of second point</description>
             </param>
         </return>
@@ -403,13 +403,13 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="p1" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p1" type="table" item-type="int" size="2">
                 <description>x, y coordinates of first point</description>
             </param>
-            <param name="p2" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p2" type="table" item-type="int" size="2">
                 <description>x, y coordinates of second point</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
@@ -431,13 +431,13 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="p1" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p1" type="table" item-type="int" size="2">
                 <description>x, y coordinates of first point</description>
             </param>
-            <param name="p2" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p2" type="table" item-type="int" size="2">
                 <description>x, y coordinates of second point</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
@@ -471,7 +471,7 @@
             <param name="isClosed" type="bool">
                 <description>Flag indicating whether the drawn polylines are closed or not. If they are closed, the function draws a line from the last vertex of each curve to its first vertex.</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
@@ -493,13 +493,13 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="p1" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p1" type="table" item-type="int" size="2">
                 <description>x, y coordinates of top-left corner</description>
             </param>
-            <param name="p2" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="p2" type="table" item-type="int" size="2">
                 <description>x, y coordinates of bottom-right corner</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
@@ -521,13 +521,13 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="center" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="center" type="table" item-type="int" size="2">
                 <description>x, y coordinates of center</description>
             </param>
             <param name="radius" type="int">
                 <description>circle radius</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
@@ -549,10 +549,10 @@
             <param name="handle" type="int">
                 <description>handle to image</description>
             </param>
-            <param name="center" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="center" type="table" item-type="int" size="2">
                 <description>x, y coordinates of center</description>
             </param>
-            <param name="radius" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="radius" type="table" item-type="int" size="2">
                 <description>radius along x and y axis</description>
             </param>
             <param name="angle" type="float" default="0.0">
@@ -564,7 +564,7 @@
             <param name="endAngle" type="float" default="360.0">
                 <description>ending angle of the elliptic arc in degrees</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
@@ -592,10 +592,10 @@
             <param name="numPoints" type="table" item-type="int">
                 <description>lengths of countours, i.e. {N1, N2, ..., NM}. the sum of numPoints items must be equal to the number of x,y pairs in points.</description>
             </param>
-            <param name="offset" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="offset" type="table" item-type="int" size="2">
                 <description>x, y offset for all points</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="type" type="int" default="8">
@@ -617,7 +617,7 @@
             <param name="points" type="table" item-type="int">
                 <description>polygon vertices, i.e. {x1, y1, x2, y2, ..., xN, yN}</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="type" type="int" default="8">
@@ -649,7 +649,7 @@
             <param name="str" type="string">
                 <description>text string to be drawn</description>
             </param>
-            <param name="pos" type="table" item-type="int" minsize="2" maxsize="2">
+            <param name="pos" type="table" item-type="int" size="2">
                 <description>x, y coordinates of the origin (bottom-left corner of the string)</description>
             </param>
             <param name="fontFace" type="int" default="sim_im_fontface_simplex">
@@ -661,7 +661,7 @@
             <param name="fontScale" type="float" default="1.0">
                 <description>font scale</description>
             </param>
-            <param name="color" type="table" item-type="int" minsize="3" maxsize="3">
+            <param name="color" type="table" item-type="int" size="3">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
