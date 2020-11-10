@@ -1404,7 +1404,7 @@
         </return>
     </command>
     <command name="writeToVisionSensor">
-        <description>Write image to vision sensor. Make sure the vision sensor is flagged as <b>external input</b>.</description>
+        <description>Write image to vision sensor. Make sure the vision sensor is flagged as <em>external input</em>.</description>
         <params>
             <param name="handle" type="int">
                 <description>handle to image</description>
