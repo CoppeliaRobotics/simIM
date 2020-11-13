@@ -26,10 +26,8 @@ set(CMAKE_MODULE_PATH
 find_package(CoppeliaSim 4.1.0.0 REQUIRED)
 #find_package(SIMD REQUIRED)
 
-include_directories(${COPPELIASIM_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/generated)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external)
-include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OpenCV_INCLUDE_DIRS})
 #include_directories(${SIMD_INCLUDE})
 
@@ -53,10 +51,7 @@ endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-set(SOURCES plugin.cpp)
-add_library(simExtImage SHARED ${SOURCES} ${COPPELIASIM_EXPORTED_SOURCES})
-#target_link_libraries(simExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${COPPELIASIM_LIBRARIES} ${SIMD_LIBRARIES})
-target_link_libraries(simExtImage ${Boost_LIBRARIES} ${OpenCV_LIBS} ${COPPELIASIM_LIBRARIES})
-
-install(TARGETS simExtImage DESTINATION ${COPPELIASIM_PLUGINS_DIR})
-
+coppeliasim_add_plugin(simExtImage SOURCES plugin.cpp)
+target_link_libraries(simExtImage Boost::boost Boost::thread)
+target_link_libraries(simExtImage ${OpenCV_LIBS})
+#target_link_libraries(simExtImage ${SIMD_LIBRARIES})
