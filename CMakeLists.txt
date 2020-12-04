@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(simExtImage)
+project(simExtIM)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_MACOSX_RPATH 1)
@@ -50,7 +50,7 @@ endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-coppeliasim_add_plugin(simExtImage SOURCES plugin.cpp)
-target_link_libraries(simExtImage Boost::boost Boost::thread)
-target_link_libraries(simExtImage ${OpenCV_LIBS})
-#target_link_libraries(simExtImage ${SIMD_LIBRARIES})
+coppeliasim_add_plugin(simExtIM SOURCES plugin.cpp)
+target_link_libraries(simExtIM Boost::boost Boost::thread)
+target_link_libraries(simExtIM ${OpenCV_LIBS})
+#target_link_libraries(simExtIM ${SIMD_LIBRARIES})
