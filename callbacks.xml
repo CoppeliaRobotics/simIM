@@ -564,7 +564,7 @@
             <param name="endAngle" type="float" default="360.0">
                 <description>ending angle of the elliptic arc in degrees</description>
             </param>
-            <param name="color" type="table" item-type="int" size="3">
+            <param name="color" type="table" item-type="int" size="3" default="{255,255,255}">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
@@ -661,7 +661,7 @@
             <param name="fontScale" type="float" default="1.0">
                 <description>font scale</description>
             </param>
-            <param name="color" type="table" item-type="int" size="3">
+            <param name="color" type="table" item-type="int" size="3" default="{255,255,255}">
                 <description>color (red, green, blue values in range 0..255)</description>
             </param>
             <param name="thickness" type="int" default="1">
