@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include "simPlusPlus/Plugin.h"
+#include "simPlusPlus/Handle.h"
 #include "plugin.h"
 #include "stubs.h"
 #include "config.h"
@@ -48,44 +49,7 @@ namespace cv
 }
 #endif
 
-class Image
-{
-private:
-    static int nextId;
-    static std::map<int, Image*> idMap;
-
-public:
-    int id;
-    cv::Mat mat;
-
-public:
-    Image(cv::Mat mat_)
-        : id(nextId++), mat(mat_)
-    {
-        idMap[id] = this;
-    }
-
-    ~Image()
-    {
-        idMap.erase(id);
-    }
-
-    static Image * byId(int id)
-    {
-        std::map<int, Image*>::iterator it = idMap.find(id);
-        if(it == idMap.end()) return 0L;
-        else return it->second;
-    }
-
-    static void getAllIds(std::vector<int> &v)
-    {
-        for(std::map<int, Image*>::iterator it = idMap.begin(); it != idMap.end(); ++it)
-            v.push_back(it->first);
-    }
-};
-
-int Image::nextId = 1;
-std::map<int, Image*> Image::idMap;
+template<> std::string sim::Handle<cv::Mat>::tag() { return "cv.Mat"; }
 
 class Plugin : public sim::Plugin
 {
@@ -97,6 +61,12 @@ public:
 
         setExtVersion("OpenCV-based Image Processing Plugin");
         setBuildDate(BUILD_DATE);
+    }
+
+    void onScriptStateDestroyed(int scriptID)
+    {
+        for(auto obj : matHandles.find(scriptID))
+            delete matHandles.remove(obj);
     }
 
     cv::Point asPoint(const std::vector<int> &v)
@@ -151,11 +121,9 @@ public:
         if(in->width <= 0) throw std::runtime_error("invalid width");
         if(in->height <= 0) throw std::runtime_error("invalid height");
         int format = parseFormat(in->format, CV_8UC3);
-        out->handle = (new Image(
-                in->initialValue
-                ? cv::Mat::ones(in->height, in->width, format) * in->initialValue
-                : cv::Mat::zeros(in->height, in->width, format)
-        ))->id;
+        auto size = cv::Size(in->height, in->width);
+        auto img = new cv::Mat(size, format, in->initialValue);
+        out->handle = matHandles.add(img, in->_scriptID);
     }
 
     void createFromData(createFromData_in *in, createFromData_out *out)
@@ -164,106 +132,101 @@ public:
         if(in->height <= 0) throw std::runtime_error("invalid height");
         int format = parseFormat(in->format, CV_8UC3);
         cv::Mat tmp(in->height, in->width, format, (void*)in->data.c_str());
-        Image *img = new Image(cv::Mat());
-        cv::cvtColor(tmp, img->mat, cv::COLOR_RGB2BGR);
-        out->handle = img->id;
+        auto img = new cv::Mat();
+        cv::cvtColor(tmp, *img, cv::COLOR_RGB2BGR);
+        out->handle = matHandles.add(img, in->_scriptID);
     }
 
     void destroy(destroy_in *in, destroy_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        delete img;
+        auto img = matHandles.get(in->handle);
+        delete matHandles.remove(img);
     }
 
     void read(read_in *in, read_out *out)
     {
-        cv::Mat mat = cv::imread(in->filename, cv::IMREAD_COLOR);
-        if(!mat.data) throw std::runtime_error("invalid image");
-        out->handle = (new Image(mat))->id;
+        auto img = new cv::Mat;
+        *img = cv::imread(in->filename, cv::IMREAD_COLOR);
+        if(!img->data) throw std::runtime_error("invalid image");
+        out->handle = matHandles.add(img, in->_scriptID);
     }
 
     void write(write_in *in, write_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        cv::imwrite(in->filename, img->mat);
+        auto img = matHandles.get(in->handle);
+        cv::imwrite(in->filename, *img);
     }
 
     void convert(convert_in *in, convert_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
         int format = parseFormat(in->format, CV_8UC3);
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        img->mat.convertTo(dstImg->mat, format, in->scale);
-        out->handle = dstImg->id;
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        img->convertTo(*dstImg, format, in->scale);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void rgb2gray(rgb2gray_in *in, rgb2gray_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_RGB2GRAY);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::cvtColor(*img, *dstImg, cv::COLOR_RGB2GRAY);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void gray2rgb(gray2rgb_in *in, gray2rgb_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_GRAY2RGB);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::cvtColor(*img, *dstImg, cv::COLOR_GRAY2RGB);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void rgb2hsv(rgb2hsv_in *in, rgb2hsv_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_RGB2HSV);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::cvtColor(*img, *dstImg, cv::COLOR_RGB2HSV);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void hsv2rgb(hsv2rgb_in *in, hsv2rgb_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_HSV2RGB);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::cvtColor(*img, *dstImg, cv::COLOR_HSV2RGB);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void rgb2hls(rgb2hls_in *in, rgb2hls_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_RGB2HLS);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::cvtColor(*img, *dstImg, cv::COLOR_RGB2HLS);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void hls2rgb(hls2rgb_in *in, hls2rgb_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::cvtColor(img->mat, dstImg->mat, cv::COLOR_HLS2RGB);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::cvtColor(*img, *dstImg, cv::COLOR_HLS2RGB);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void split(split_in *in, split_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        const int ch = img->mat.channels();
+        auto img = matHandles.get(in->handle);
+        const int ch = img->channels();
         if(ch == 1) throw std::runtime_error("not a multichannel image");
         cv::Mat *dst = new cv::Mat[ch];
-        cv::split(img->mat, &dst[0]);
+        cv::split(*img, dst);
         for(size_t i = 0; i < ch; i++)
-            out->handles.push_back((new Image(dst[i]))->id);
+        {
+            auto dsti = new cv::Mat();
+            *dsti = dst[i];
+            out->handles.push_back(matHandles.add(dsti, in->_scriptID));
+        }
         delete[] dst;
     }
 
@@ -272,14 +235,13 @@ public:
         std::vector<cv::Mat> srcv;
         for(size_t i = 0; i < in->handles.size(); i++)
         {
-            Image *img = Image::byId(in->handles[i]);
-            if(!img) throw std::runtime_error((boost::format("invalid channel %d handle") % i).str());
-            srcv.push_back(img->mat);
+            auto img = matHandles.get(in->handles[i]);
+            srcv.push_back(*img);
         }
         if(srcv.size() < 2) throw std::runtime_error("invalid number of channels");
-        Image *img = new Image(cv::Mat());
-        cv::merge(&srcv[0], srcv.size(), img->mat);
-        out->handle = img->id;
+        cv::Mat *img = new cv::Mat();
+        cv::merge(&srcv[0], srcv.size(), *img);
+        out->handle = matHandles.add(img, in->_scriptID);
     }
 
     void mixChannels(mixChannels_in *in, mixChannels_out *out)
@@ -287,33 +249,30 @@ public:
         std::vector<cv::Mat> srcv;
         for(size_t i = 0; i < in->inputHandles.size(); i++)
         {
-            Image *img = Image::byId(in->inputHandles[i]);
-            if(!img) throw std::runtime_error((boost::format("invalid input image %d handle") % i).str());
-            srcv.push_back(img->mat);
+            auto img = matHandles.get(in->inputHandles[i]);
+            srcv.push_back(*img);
         }
         std::vector<cv::Mat> dstv;
         for(size_t i = 0; i < in->outputHandles.size(); i++)
         {
-            Image *img = Image::byId(in->outputHandles[i]);
-            if(!img) throw std::runtime_error((boost::format("invalid output image %d handle") % i).str());
-            dstv.push_back(img->mat);
+            auto img = matHandles.get(in->outputHandles[i]);
+            dstv.push_back(*img);
         }
         cv::mixChannels(&srcv[0], srcv.size(), &dstv[0], dstv.size(), &in->fromTo[0], in->fromTo.size());
     }
 
     void get(get_in *in, get_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        switch(img->mat.depth())
+        auto img = matHandles.get(in->handle);
+        switch(img->depth())
         {
         case CV_8U:
-            for(size_t i = 0; i < img->mat.channels(); i++)
-                out->value.push_back(img->mat.at<cv::Vec3b>(in->coord[1], in->coord[0])[i]);
+            for(size_t i = 0; i < img->channels(); i++)
+                out->value.push_back(img->at<cv::Vec3b>(in->coord[1], in->coord[0])[i]);
             break;
         case CV_32F:
-            for(size_t i = 0; i < img->mat.channels(); i++)
-                out->value.push_back(img->mat.at<cv::Vec3f>(in->coord[1], in->coord[0])[i]);
+            for(size_t i = 0; i < img->channels(); i++)
+                out->value.push_back(img->at<cv::Vec3f>(in->coord[1], in->coord[0])[i]);
             break;
         default:
             throw std::runtime_error("unsupported channel type");
@@ -322,18 +281,17 @@ public:
 
     void set(set_in *in, set_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        if(in->value.size() != img->mat.channels()) throw std::runtime_error("invalid pixel size");
-        switch(img->mat.depth())
+        auto img = matHandles.get(in->handle);
+        if(in->value.size() != img->channels()) throw std::runtime_error("invalid pixel size");
+        switch(img->depth())
         {
         case CV_8U:
-            for(size_t i = 0; i < img->mat.channels(); i++)
-                img->mat.at<cv::Vec3b>(in->coord[1], in->coord[0])[i] = in->value[i];
+            for(size_t i = 0; i < img->channels(); i++)
+                img->at<cv::Vec3b>(in->coord[1], in->coord[0])[i] = in->value[i];
             break;
         case CV_32F:
-            for(size_t i = 0; i < img->mat.channels(); i++)
-                img->mat.at<cv::Vec3f>(in->coord[1], in->coord[0])[i] = in->value[i];
+            for(size_t i = 0; i < img->channels(); i++)
+                img->at<cv::Vec3f>(in->coord[1], in->coord[0])[i] = in->value[i];
             break;
         default:
             throw std::runtime_error("unsupported channel type");
@@ -362,59 +320,52 @@ public:
     {
         if(in->width <= 0) throw std::runtime_error("invalid width");
         if(in->height <= 0) throw std::runtime_error("invalid height");
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int interp = parseInterp(in->interpolation, sim_im_interp_linear);
-        cv::resize(img->mat, dstImg->mat, cv::Size(in->width, in->height), 0, 0, interp);
-        out->handle = dstImg->id;
+        cv::resize(*img, *dstImg, cv::Size(in->width, in->height), 0, 0, interp);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void size(size_in *in, size_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
         out->size.resize(2);
-        out->size[0] = img->mat.cols;
-        out->size[1] = img->mat.rows;
+        out->size[0] = img->cols;
+        out->size[1] = img->rows;
     }
 
     void copy(copy_in *in, copy_out *out)
     {
         if(in->size[0] <= 0) throw std::runtime_error("invalid width");
         if(in->size[1] <= 0) throw std::runtime_error("invalid height");
-        Image *srcImg = Image::byId(in->srcHandle);
-        if(!srcImg) throw std::runtime_error("invalid source image handle");
-        Image *dstImg = Image::byId(in->dstHandle);
-        if(!dstImg) throw std::runtime_error("invalid destination image handle");
-        cv::Mat src = srcImg->mat(asRect(in->srcOffset, in->size));
-        cv::Mat dst = dstImg->mat(asRect(in->dstOffset, in->size));
+        cv::Mat *srcImg = matHandles.get(in->srcHandle);
+        cv::Mat *dstImg = matHandles.get(in->dstHandle);
+        cv::Mat src = (*srcImg)(asRect(in->srcOffset, in->size));
+        cv::Mat dst = (*dstImg)(asRect(in->dstOffset, in->size));
         src.copyTo(dst);
     }
 
     void clipLine(clipLine_in *in, clipLine_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
         cv::Point p1(asPoint(in->p1)), p2(asPoint(in->p2));
-        out->valid = cv::clipLine(cv::Rect(0, 0, img->mat.cols, img->mat.rows), p1, p2);
+        out->valid = cv::clipLine(cv::Rect(0, 0, img->cols, img->rows), p1, p2);
         toVector(p1, out->p1);
         toVector(p2, out->p2);
     }
 
     void line(line_in *in, line_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        cv::line(img->mat, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift);
+        auto img = matHandles.get(in->handle);
+        cv::line(*img, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift);
     }
 
     void arrowedLine(arrowedLine_in *in, arrowedLine_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
 #ifdef HAVE_CV_ARROWEDLINE
-        cv::arrowedLine(img->mat, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift, in->tipLength);
+        cv::arrowedLine(*img, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift, in->tipLength);
 #else
         throw std::runtime_error("cv::arrowedLine not available in current version of OpenCV");
 #endif
@@ -422,8 +373,7 @@ public:
 
     void polylines(polylines_in *in, polylines_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
         int sum = 0;
         for(size_t i = 0; i < in->numPoints.size(); i++) sum += 2 * in->numPoints[i];
         if(sum != in->points.size()) throw std::runtime_error("invalid number of points or invalid elements in numPoints");
@@ -437,35 +387,31 @@ public:
             pts[i] = pt;
             pt += in->numPoints[i];
         }
-        cv::polylines(img->mat, pts, &in->numPoints[0], in->numPoints.size(), in->isClosed, asRGB(in->color), in->thickness, in->type, in->shift);
+        cv::polylines(*img, pts, &in->numPoints[0], in->numPoints.size(), in->isClosed, asRGB(in->color), in->thickness, in->type, in->shift);
         delete[] pts;
     }
 
     void rectangle(rectangle_in *in, rectangle_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        cv::rectangle(img->mat, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift);
+        auto img = matHandles.get(in->handle);
+        cv::rectangle(*img, asPoint(in->p1), asPoint(in->p2), asRGB(in->color), in->thickness, in->type, in->shift);
     }
 
     void circle(circle_in *in, circle_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        cv::circle(img->mat, asPoint(in->center), in->radius, asRGB(in->color), in->thickness, in->type, in->shift);
+        auto img = matHandles.get(in->handle);
+        cv::circle(*img, asPoint(in->center), in->radius, asRGB(in->color), in->thickness, in->type, in->shift);
     }
 
     void ellipse(ellipse_in *in, ellipse_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        cv::ellipse(img->mat, asPoint(in->center), asSize(in->radius), in->angle, in->startAngle, in->endAngle, asRGB(in->color), in->thickness, in->type, in->shift);
+        auto img = matHandles.get(in->handle);
+        cv::ellipse(*img, asPoint(in->center), asSize(in->radius), in->angle, in->startAngle, in->endAngle, asRGB(in->color), in->thickness, in->type, in->shift);
     }
 
     void fillPoly(fillPoly_in *in, fillPoly_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
         int sum = 0;
         for(size_t i = 0; i < in->numPoints.size(); i++) sum += 2 * in->numPoints[i];
         if(sum != in->points.size()) throw std::runtime_error("invalid number of points or invalid elements in numPoints");
@@ -479,18 +425,17 @@ public:
             pts[i] = pt;
             pt += in->numPoints[i];
         }
-        cv::fillPoly(img->mat, pts, &in->numPoints[0], in->numPoints.size(), asRGB(in->color), in->type, in->shift, asPoint(in->offset));
+        cv::fillPoly(*img, pts, &in->numPoints[0], in->numPoints.size(), asRGB(in->color), in->type, in->shift, asPoint(in->offset));
         delete[] pts;
     }
 
     void fillConvexPoly(fillConvexPoly_in *in, fillConvexPoly_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
         std::vector<cv::Point> points;
         for(size_t i = 0; i < in->points.size(); i += 2)
             points.push_back(cv::Point(in->points[i], in->points[i+1]));
-        cv::fillConvexPoly(img->mat, &points[0], points.size(), asRGB(in->color), in->type, in->shift);
+        cv::fillConvexPoly(*img, &points[0], points.size(), asRGB(in->color), in->type, in->shift);
     }
 
     int parseFontFace(int f, int def)
@@ -520,10 +465,9 @@ public:
 
     void text(text_in *in, text_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
         int ff = parseFontFace(in->fontFace, cv::FONT_HERSHEY_SIMPLEX) | (in->italic ? cv::FONT_ITALIC : 0);
-        cv::putText(img->mat, in->str, asPoint(in->pos), ff, in->fontScale, asRGB(in->color), in->thickness, in->type, in->bottomLeftOrigin);
+        cv::putText(*img, in->str, asPoint(in->pos), ff, in->fontScale, asRGB(in->color), in->thickness, in->type, in->bottomLeftOrigin);
     }
 
     void textSize(textSize_in *in, textSize_out *out)
@@ -536,102 +480,87 @@ public:
 
     void abs(abs_in *in, abs_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        dstImg->mat = cv::abs(img->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        *dstImg = cv::abs(*img);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void absdiff(absdiff_in *in, absdiff_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::absdiff(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::absdiff(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void absdiffK(absdiffK_in *in, absdiffK_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::absdiff(img->mat, in->k, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::absdiff(*img, in->k, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void add(add_in *in, add_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::add(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::add(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void addK(addK_in *in, addK_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::add(img->mat, in->k, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::add(*img, in->k, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void subtract(subtract_in *in, subtract_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::subtract(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::subtract(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void subtractK(subtractK_in *in, subtractK_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::subtract(img->mat, in->k, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::subtract(*img, in->k, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void multiply(multiply_in *in, multiply_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::multiply(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::multiply(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void divide(divide_in *in, divide_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::divide(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::divide(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void divideK(divideK_in *in, divideK_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::divide(in->k, img->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::divide(in->k, *img, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     int parseCmpOp(int o, int def)
@@ -657,24 +586,21 @@ public:
 
     void compare(compare_in *in, compare_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         int op = parseCmpOp(in->op, cv::CMP_EQ);
-        cv::compare(img1->mat, img2->mat, dstImg->mat, op);
-        out->handle = dstImg->id;
+        cv::compare(*img1, *img2, *dstImg, op);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void compareK(compareK_in *in, compareK_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int op = parseCmpOp(in->op, cv::CMP_EQ);
-        cv::compare(img->mat, in->k, dstImg->mat, op);
-        out->handle = dstImg->id;
+        cv::compare(*img, in->k, *dstImg, op);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     int parseReduceOp(int o, int def)
@@ -696,21 +622,19 @@ public:
 
     void reduce(reduce_in *in, reduce_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int op = parseReduceOp(in->op, cv::REDUCE_SUM);
-        cv::reduce(img->mat, dstImg->mat, in->dim, op);
-        out->handle = dstImg->id;
+        cv::reduce(*img, *dstImg, in->dim, op);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void repeat(repeat_in *in, repeat_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::repeat(img->mat, in->ny, in->nx, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::repeat(*img, in->ny, in->nx, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     int parseFlipOp(int o, int def)
@@ -730,187 +654,160 @@ public:
 
     void flip(flip_in *in, flip_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int op = parseFlipOp(in->op, 0);
-        cv::flip(img->mat, dstImg->mat, op);
-        out->handle = dstImg->id;
+        cv::flip(*img, *dstImg, op);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void log(log_in *in, log_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::log(img->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::log(*img, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void exp(exp_in *in, exp_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::exp(img->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::exp(*img, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void pow(pow_in *in, pow_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::pow(img->mat, in->power, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::pow(*img, in->power, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void sqrt(sqrt_in *in, sqrt_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::sqrt(img->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::sqrt(*img, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void addWeighted(addWeighted_in *in, addWeighted_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::addWeighted(img1->mat, in->alpha, img2->mat, in->beta, in->gamma, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::addWeighted(*img1, in->alpha, *img2, in->beta, in->gamma, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void scaleAdd(scaleAdd_in *in, scaleAdd_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::scaleAdd(img1->mat, in->alpha, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::scaleAdd(*img1, in->alpha, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void magnitude(magnitude_in *in, magnitude_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = new Image(cv::Mat());
-        cv::magnitude(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = new cv::Mat();
+        cv::magnitude(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void phase(phase_in *in, phase_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = new Image(cv::Mat());
-        cv::phase(img1->mat, img2->mat, dstImg->mat, in->angleInDegrees);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = new cv::Mat();
+        cv::phase(*img1, *img2, *dstImg, in->angleInDegrees);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void polar2cart(polar2cart_in *in, polar2cart_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg1 = new Image(cv::Mat());
-        Image *dstImg2 = new Image(cv::Mat());
-        cv::cartToPolar(img1->mat, img2->mat, dstImg1->mat, dstImg2->mat, in->angleInDegrees);
-        out->handle1 = dstImg1->id;
-        out->handle2 = dstImg2->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg1 = new cv::Mat();
+        cv::Mat *dstImg2 = new cv::Mat();
+        cv::cartToPolar(*img1, *img2, *dstImg1, *dstImg2, in->angleInDegrees);
+        out->handle1 = matHandles.add(dstImg1, in->_scriptID);
+        out->handle2 = matHandles.add(dstImg2, in->_scriptID);
     }
 
     void cart2polar(cart2polar_in *in, cart2polar_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg1 = new Image(cv::Mat());
-        Image *dstImg2 = new Image(cv::Mat());
-        cv::cartToPolar(img1->mat, img2->mat, dstImg1->mat, dstImg2->mat, in->angleInDegrees);
-        out->handle1 = dstImg1->id;
-        out->handle2 = dstImg2->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg1 = new cv::Mat();
+        cv::Mat *dstImg2 = new cv::Mat();
+        cv::cartToPolar(*img1, *img2, *dstImg1, *dstImg2, in->angleInDegrees);
+        out->handle1 = matHandles.add(dstImg1, in->_scriptID);
+        out->handle2 = matHandles.add(dstImg2, in->_scriptID);
     }
 
     void bitwiseAnd(bitwiseAnd_in *in, bitwiseAnd_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::bitwise_and(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::bitwise_and(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void bitwiseAndK(bitwiseAndK_in *in, bitwiseAndK_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::bitwise_and(img->mat, in->k, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::bitwise_and(*img, in->k, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void bitwiseOr(bitwiseOr_in *in, bitwiseOr_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::bitwise_or(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::bitwise_or(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void bitwiseOrK(bitwiseOrK_in *in, bitwiseOrK_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::bitwise_or(img->mat, in->k, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::bitwise_or(*img, in->k, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void bitwiseXor(bitwiseXor_in *in, bitwiseXor_out *out)
     {
-        Image *img1 = Image::byId(in->handle1);
-        if(!img1) throw std::runtime_error("invalid image 1 handle");
-        Image *img2 = Image::byId(in->handle2);
-        if(!img2) throw std::runtime_error("invalid image 2 handle");
-        Image *dstImg = in->inPlace ? img1 : new Image(cv::Mat());
-        cv::bitwise_xor(img1->mat, img2->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img1 = matHandles.get(in->handle1);
+        auto img2 = matHandles.get(in->handle2);
+        cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
+        cv::bitwise_xor(*img1, *img2, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void bitwiseXorK(bitwiseXorK_in *in, bitwiseXorK_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::bitwise_xor(img->mat, in->k, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::bitwise_xor(*img, in->k, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void bitwiseNot(bitwiseNot_in *in, bitwiseNot_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
-        cv::bitwise_not(img->mat, dstImg->mat);
-        out->handle = dstImg->id;
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
+        cv::bitwise_not(*img, *dstImg);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     int parseDistanceType(int d, int def)
@@ -943,34 +840,27 @@ public:
 
     void distanceTransform(distanceTransform_in *in, distanceTransform_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
-        Image *dstImg = in->inPlace ? img : new Image(cv::Mat());
+        auto img = matHandles.get(in->handle);
+        cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int dt = parseDistanceType(in->distanceType, cv::DIST_L2);
         int ms = parseMaskSize(in->maskSize, cv::DIST_MASK_PRECISE);
-        cv::distanceTransform(img->mat, dstImg->mat, dt, ms);
-        out->handle = dstImg->id;
-    }
-
-    void handles(handles_in *in, handles_out *out)
-    {
-        Image::getAllIds(out->handles);
+        cv::distanceTransform(*img, *dstImg, dt, ms);
+        out->handle = matHandles.add(dstImg, in->_scriptID);
     }
 
     void writeToVisionSensor(writeToVisionSensor_in *in, writeToVisionSensor_out *out)
     {
-        Image *img = Image::byId(in->handle);
-        if(!img) throw std::runtime_error("invalid image handle");
+        auto img = matHandles.get(in->handle);
 
         simInt resolution[2];
         if(-1 == simGetVisionSensorResolution(in->sensorHandle, &resolution[0]))
             throw std::runtime_error("failed to get sensor resolution");
 
-        if(img->mat.cols != resolution[0] || img->mat.rows != resolution[1])
-            throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->mat.cols % img->mat.rows).str());
+        if(img->cols != resolution[0] || img->rows != resolution[1])
+            throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->cols % img->rows).str());
 
         cv::Mat tmp;
-        cv::cvtColor(img->mat, tmp, cv::COLOR_BGR2RGB);
+        cv::cvtColor(*img, tmp, cv::COLOR_BGR2RGB);
         if(-1 == simSetVisionSensorCharImage(in->sensorHandle, (const simUChar*)tmp.data))
             throw std::runtime_error("failed to write to vision sensor");
     }
@@ -981,26 +871,25 @@ public:
         if(-1 == simGetVisionSensorResolution(in->sensorHandle, &resolution[0]))
             throw std::runtime_error("failed to get sensor resolution");
 
-        Image *img = in->handle != -1 ? Image::byId(in->handle) : new Image(cv::Mat::zeros(resolution[1], resolution[0], CV_8UC3));
-        if(!img) throw std::runtime_error("invalid image handle");
+        cv::Mat *img = in->handle != "" ? matHandles.get(in->handle) : new cv::Mat(resolution[1], resolution[0], CV_8UC3);
 
-        if(img->mat.cols != resolution[0] || img->mat.rows != resolution[1])
+        if(img->cols != resolution[0] || img->rows != resolution[1])
         {
-            if(in->handle == -1) delete img;
-            throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->mat.cols % img->mat.rows).str());
+            if(in->handle == "") delete img;
+            throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->cols % img->rows).str());
         }
 
         simUChar* data = simGetVisionSensorCharImage(in->sensorHandle, &resolution[0], &resolution[1]);
         if(data)
         {
-            cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(img->mat);
-            cv::cvtColor(img->mat, img->mat, cv::COLOR_RGB2BGR);
+            cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(*img);
+            cv::cvtColor(*img, *img, cv::COLOR_RGB2BGR);
             simReleaseBuffer(reinterpret_cast<simChar*>(data));
-            out->handle = img->id;
+            out->handle = matHandles.add(img, in->_scriptID);
         }
         else
         {
-            if(in->handle == -1) delete img;
+            if(in->handle == "") delete img;
             out->handle = -1;
             throw std::runtime_error("failed to read from vision sensor");
         }
@@ -1033,23 +922,23 @@ public:
         if(it == videoCapture.end() || !videoCapture[in->deviceIndex].isOpened())
             throw std::runtime_error("invalid device. did you call simIM.openVideoCapture() first?");
 
-        Image *img = in->handle != -1 ? Image::byId(in->handle) : new Image(cv::Mat());
-        if(!img) throw std::runtime_error("invalid image handle");
+        cv::Mat *img = in->handle != "" ? matHandles.get(in->handle) : new cv::Mat();
 
-        if(videoCapture[in->deviceIndex].read(img->mat))
+        if(videoCapture[in->deviceIndex].read(*img))
         {
-            out->handle = img->id;
+            out->handle = matHandles.add(img, in->_scriptID);
         }
         else
         {
-            if(in->handle == -1) delete img;
-            out->handle = -1;
+            if(in->handle == "") delete img;
+            out->handle = "";
             throw std::runtime_error("failed to read video frame");
         }
     }
 
 private:
     std::map<int, cv::VideoCapture> videoCapture;
+    sim::Handles<cv::Mat> matHandles;
 };
 
 SIM_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)

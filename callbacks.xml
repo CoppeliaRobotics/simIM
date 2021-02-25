@@ -40,7 +40,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
         </return>
@@ -62,7 +62,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
         </return>
@@ -70,7 +70,7 @@
     <command name="destroy">
         <description>Destroy (i.e.: free memory) an image with given handle</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
         </params>
@@ -85,7 +85,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
         </return>
@@ -93,7 +93,7 @@
     <command name="write">
         <description>Write the image with given handle to a file.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="filename" type="string">
@@ -106,7 +106,7 @@
     <command name="convert">
         <description>Convert the image to a different format.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="format" type="int">
@@ -120,7 +120,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to the converted image</description>
             </param>
         </return>
@@ -128,7 +128,7 @@
     <command name="rgb2gray">
         <description>Convert the specified RGB image to gray.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -136,7 +136,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to the converted image</description>
             </param>
         </return>
@@ -144,7 +144,7 @@
     <command name="gray2rgb">
         <description>Convert the specified grayscale image to RGB.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -152,7 +152,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to the converted image</description>
             </param>
         </return>
@@ -160,7 +160,7 @@
     <command name="rgb2hsv">
         <description>Convert the specified RGB image to HSV.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -168,7 +168,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to the converted image</description>
             </param>
         </return>
@@ -176,7 +176,7 @@
     <command name="hsv2rgb">
         <description>Convert the specified HSV image to RGB.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -184,7 +184,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to the converted image</description>
             </param>
         </return>
@@ -192,7 +192,7 @@
     <command name="rgb2hls">
         <description>Convert the specified RGB image to HLS.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -200,7 +200,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to the converted image</description>
             </param>
         </return>
@@ -208,7 +208,7 @@
     <command name="hls2rgb">
         <description>Convert the specified HLS image to RGB.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -216,7 +216,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to the converted image</description>
             </param>
         </return>
@@ -224,12 +224,12 @@
     <command name="split">
         <description>Split a multichannel image.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
         </params>
         <return>
-            <param name="handles" type="table" item-type="int">
+            <param name="handles" type="table" item-type="string">
                 <description>handles to individual channel images</description>
             </param>
         </return>
@@ -237,12 +237,12 @@
     <command name="merge">
         <description>Merge many single channel images into a multichannel image.</description>
         <params>
-            <param name="handles" type="table" item-type="int">
+            <param name="handles" type="table" item-type="string">
                 <description>handles to individual channel images</description>
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to merged image</description>
             </param>
         </return>
@@ -250,10 +250,10 @@
     <command name="mixChannels">
         <description>Mix many single channel images into many multichannel images.</description>
         <params>
-            <param name="inputHandles" type="table" item-type="int">
+            <param name="inputHandles" type="table" item-type="string">
                 <description>handles to input images</description>
             </param>
-            <param name="outputHandles" type="table" item-type="int">
+            <param name="outputHandles" type="table" item-type="string">
                 <description>handles to output images</description>
             </param>
             <param name="fromTo" type="table" item-type="int">
@@ -266,7 +266,7 @@
     <command name="get">
         <description>Get pixel at specified coordinate.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="coord" type="table" item-type="int" size="2">
@@ -282,7 +282,7 @@
     <command name="set">
         <description>Set pixel at specified coordinate.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="coord" type="table" item-type="int" size="2">
@@ -315,7 +315,7 @@
     <command name="resize">
         <description>Resize an image and return the resized image (original image is not modified).</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="width" type="int">
@@ -332,7 +332,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to resized image</description>
             </param>
         </return>
@@ -340,7 +340,7 @@
     <command name="size">
         <description>Get the size of an image.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
         </params>
@@ -353,13 +353,13 @@
     <command name="copy">
         <description>Copy a (portion of) image to another image.</description>
         <params>
-            <param name="srcHandle" type="int">
+            <param name="srcHandle" type="string">
                 <description>handle to source image</description>
             </param>
             <param name="srcOffset" type="table" item-type="int" size="2">
                 <description>x, y offset in the source image</description>
             </param>
-            <param name="dstHandle" type="int">
+            <param name="dstHandle" type="string">
                 <description>handle to destination image</description>
             </param>
             <param name="dstOffset" type="table" item-type="int" size="2">
@@ -375,7 +375,7 @@
     <command name="clipLine">
         <description>Clips the line against the image rectangle.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="p1" type="table" item-type="int" size="2">
@@ -400,7 +400,7 @@
     <command name="line">
         <description>Draw a line segment between (x1,y1) and (x2,y2) points in the image.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="p1" type="table" item-type="int" size="2">
@@ -428,7 +428,7 @@
     <command name="arrowedLine">
         <description>Draw a arrow segment starting from (x1,y1) and pointing to (x2,y2).</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="p1" type="table" item-type="int" size="2">
@@ -459,7 +459,7 @@
     <command name="polylines">
         <description>Draw several polygonal curves.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="points" type="table" item-type="int">
@@ -490,7 +490,7 @@
     <command name="rectangle">
         <description>Draw a rectangle with corners (x1,y1) and (x2,y2) points in the image.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="p1" type="table" item-type="int" size="2">
@@ -518,7 +518,7 @@
     <command name="circle">
         <description>Draw a circle with center (cx,cy) and radius r.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="center" type="table" item-type="int" size="2">
@@ -546,7 +546,7 @@
     <command name="ellipse">
         <description>Draw an ellipse with center (cx,cy) and axes (rx,ry) points in the image.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="center" type="table" item-type="int" size="2">
@@ -583,7 +583,7 @@
     <command name="fillPoly">
         <description>Fills the area bounded by one or more polygon.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="points" type="table" item-type="int">
@@ -611,7 +611,7 @@
     <command name="fillConvexPoly">
         <description>Fills a convex polygon.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="points" type="table" item-type="int">
@@ -643,7 +643,7 @@
     <command name="text">
         <description>Drawn a text string.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="str" type="string">
@@ -711,7 +711,7 @@
     <command name="abs">
         <description>Calculates an absolute value of each pixel.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -719,7 +719,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -727,10 +727,10 @@
     <command name="absdiff">
         <description>Calculates the per-element absolute difference between two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -738,7 +738,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -746,7 +746,7 @@
     <command name="absdiffK">
         <description>Calculates the per-element absolute difference between an array and a scalar.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="k" type="table" item-type="float">
@@ -757,7 +757,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -765,10 +765,10 @@
     <command name="add">
         <description>Calculates the per-element sum of two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -776,7 +776,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -784,7 +784,7 @@
     <command name="addK">
         <description>Calculates the per-element sum of an array and a scalar.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="k" type="table" item-type="float">
@@ -795,7 +795,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -803,10 +803,10 @@
     <command name="subtract">
         <description>Calculates the per-element difference of two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -814,7 +814,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -822,7 +822,7 @@
     <command name="subtractK">
         <description>Calculates the per-element difference of an array and a scalar.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="k" type="table" item-type="float">
@@ -833,7 +833,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -841,10 +841,10 @@
     <command name="multiply">
         <description>Calculates the per-element product of two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -852,7 +852,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -860,10 +860,10 @@
     <command name="divide">
         <description>Calculates the per-element division of two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -871,7 +871,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -882,7 +882,7 @@
             <param name="k" type="table" item-type="float">
                 <description>scalar</description>
             </param>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -890,7 +890,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -906,10 +906,10 @@
     <command name="compare">
         <description>Performs the per-element comparison of two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="op" type="int">
@@ -920,7 +920,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -928,7 +928,7 @@
     <command name="compareK">
         <description>Performs the per-element comparison of an array and scalar value.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="k" type="table" item-type="float">
@@ -942,7 +942,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -964,7 +964,7 @@
     <command name="reduce">
         <description>Reduces a matrix to a vector.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="dim" type="int">
@@ -978,7 +978,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -986,7 +986,7 @@
     <command name="repeat">
         <description>Fills the output array with repeated copies of the input array.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="nx" type="int">
@@ -1000,7 +1000,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1019,7 +1019,7 @@
     <command name="flip">
         <description>Flips an image around vertical, horizontal, or both axes.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="op" type="int" default="0">
@@ -1030,7 +1030,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1038,7 +1038,7 @@
     <command name="log">
         <description>Calculates the natural logarithm of every array element.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -1046,7 +1046,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1054,7 +1054,7 @@
     <command name="exp">
         <description>Calculates the exponential of every array element.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -1062,7 +1062,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1070,7 +1070,7 @@
     <command name="pow">
         <description>Raises every array element to a power.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="power" type="float">
@@ -1081,7 +1081,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1089,7 +1089,7 @@
     <command name="sqrt">
         <description>Calculates the square root of every array element.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -1097,7 +1097,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1105,10 +1105,10 @@
     <command name="addWeighted">
         <description>Calculates the weighted sum of two arrays, i.e. DST(i) = SRC1(i)*alpha + SRC2(i)*beta + gamma.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="alpha" type="float">
@@ -1125,7 +1125,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1133,10 +1133,10 @@
     <command name="scaleAdd">
         <description>Calculates the sum of a scaled array and another array, i.e. DST(i) = SRC1(i)*scale + SRC2(i).</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="alpha" type="float">
@@ -1147,7 +1147,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1155,15 +1155,15 @@
     <command name="magnitude">
         <description>Calculates the magnitude of 2D vectors, i.e. DST(i) = sqrt(SRC1(i)^2, SRC2(i)^2).</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1171,10 +1171,10 @@
     <command name="phase">
         <description>Calculates the rotation angle of 2D vectors, i.e. DST(i) = atan2(SRC2(i), SRC1(i)).</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="angleInDegrees" type="bool" default="false">
@@ -1182,7 +1182,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1190,10 +1190,10 @@
     <command name="polar2cart">
         <description>Calculates x and y coordinates of 2D vectors from their magnitude and angle.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image (magnitude)</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image (angle)</description>
             </param>
             <param name="angleInDegrees" type="bool" default="false">
@@ -1201,10 +1201,10 @@
             </param>
         </params>
         <return>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle of resulting image (x)</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle of resulting image (y)</description>
             </param>
         </return>
@@ -1212,10 +1212,10 @@
     <command name="cart2polar">
         <description>Calculates magnitude and angle coordinates of 2D vectors from their x and y coordinates.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image (x)</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image (y)</description>
             </param>
             <param name="angleInDegrees" type="bool" default="false">
@@ -1223,10 +1223,10 @@
             </param>
         </params>
         <return>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle of resulting image (magnitude)</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle of resulting image (angle)</description>
             </param>
         </return>
@@ -1234,10 +1234,10 @@
     <command name="bitwiseAnd">
         <description>Calculates the per-element bit-wise conjunction of two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -1245,7 +1245,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1253,7 +1253,7 @@
     <command name="bitwiseAndK">
         <description>Calculates the per-element bit-wise conjunction of an array and a scalar.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="k" type="table" item-type="float">
@@ -1264,7 +1264,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1272,10 +1272,10 @@
     <command name="bitwiseOr">
         <description>Calculates the per-element bit-wise disjunction of two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -1283,7 +1283,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1291,7 +1291,7 @@
     <command name="bitwiseOrK">
         <description>Calculates the per-element bit-wise disjunction of an array and a scalar.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="k" type="table" item-type="float">
@@ -1302,7 +1302,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1310,10 +1310,10 @@
     <command name="bitwiseXor">
         <description>Calculates the per-element bit-wise exclusive-or of two arrays.</description>
         <params>
-            <param name="handle1" type="int">
+            <param name="handle1" type="string">
                 <description>handle to first image</description>
             </param>
-            <param name="handle2" type="int">
+            <param name="handle2" type="string">
                 <description>handle to second image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -1321,7 +1321,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1329,7 +1329,7 @@
     <command name="bitwiseXorK">
         <description>Calculates the per-element bit-wise exclusive-or of an array and a scalar.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="k" type="table" item-type="float">
@@ -1340,7 +1340,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1348,7 +1348,7 @@
     <command name="bitwiseNot">
         <description>Inverts every bit of an array.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -1356,7 +1356,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle of resulting image</description>
             </param>
         </return>
@@ -1374,7 +1374,7 @@
     <command name="distanceTransform">
         <description>Calculates the distance to the closest zero pixel for each pixel of the source image.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="distanceType" type="int" default="sim_im_dist_L2">
@@ -1388,25 +1388,15 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
-            </param>
-        </return>
-    </command>
-    <command name="handles">
-        <description>Get all the active handles.</description>
-        <params>
-        </params>
-        <return>
-            <param name="handles" type="table" item-type="int">
-                <description>handles</description>
             </param>
         </return>
     </command>
     <command name="writeToVisionSensor">
         <description>Write image to vision sensor. Make sure the vision sensor is flagged as <em>external input</em>.</description>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
             <param name="sensorHandle" type="int">
@@ -1422,12 +1412,12 @@
             <param name="sensorHandle" type="int">
                 <description>handle to vision sensor</description>
             </param>
-            <param name="handle" type="int" default="-1">
-                <description>handle to existing image, or -1 to create and return a new image</description>
+            <param name="handle" type="string" default='""'>
+                <description>handle to existing image, or "" to create and return a new image</description>
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to new image (or existing image if given)</description>
             </param>
         </return>
@@ -1458,12 +1448,12 @@
             <param name="deviceIndex" type="int">
                 <description>device index (0 based)</description>
             </param>
-            <param name="handle" type="int" default="-1">
-                <description>handle to existing image, or -1 to create and return a new image</description>
+            <param name="handle" type="string" default='""'>
+                <description>handle to existing image, or "" to create and return a new image</description>
             </param>
         </params>
         <return>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>handle to new image (or existing image if given)</description>
             </param>
         </return>
