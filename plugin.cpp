@@ -123,7 +123,7 @@ public:
         int format = parseFormat(in->format, CV_8UC3);
         auto size = cv::Size(in->height, in->width);
         auto img = new cv::Mat(size, format, in->initialValue);
-        out->handle = matHandles.add(img, in->_scriptID);
+        out->handle = matHandles.add(img, in->_.scriptID);
     }
 
     void createFromData(createFromData_in *in, createFromData_out *out)
@@ -134,7 +134,7 @@ public:
         cv::Mat tmp(in->height, in->width, format, (void*)in->data.c_str());
         auto img = new cv::Mat();
         cv::cvtColor(tmp, *img, cv::COLOR_RGB2BGR);
-        out->handle = matHandles.add(img, in->_scriptID);
+        out->handle = matHandles.add(img, in->_.scriptID);
     }
 
     void destroy(destroy_in *in, destroy_out *out)
@@ -148,7 +148,7 @@ public:
         auto img = new cv::Mat;
         *img = cv::imread(in->filename, cv::IMREAD_COLOR);
         if(!img->data) throw std::runtime_error("invalid image");
-        out->handle = matHandles.add(img, in->_scriptID);
+        out->handle = matHandles.add(img, in->_.scriptID);
     }
 
     void write(write_in *in, write_out *out)
@@ -163,7 +163,7 @@ public:
         int format = parseFormat(in->format, CV_8UC3);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         img->convertTo(*dstImg, format, in->scale);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void rgb2gray(rgb2gray_in *in, rgb2gray_out *out)
@@ -171,7 +171,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::cvtColor(*img, *dstImg, cv::COLOR_RGB2GRAY);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void gray2rgb(gray2rgb_in *in, gray2rgb_out *out)
@@ -179,7 +179,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::cvtColor(*img, *dstImg, cv::COLOR_GRAY2RGB);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void rgb2hsv(rgb2hsv_in *in, rgb2hsv_out *out)
@@ -187,7 +187,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::cvtColor(*img, *dstImg, cv::COLOR_RGB2HSV);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void hsv2rgb(hsv2rgb_in *in, hsv2rgb_out *out)
@@ -195,7 +195,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::cvtColor(*img, *dstImg, cv::COLOR_HSV2RGB);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void rgb2hls(rgb2hls_in *in, rgb2hls_out *out)
@@ -203,7 +203,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::cvtColor(*img, *dstImg, cv::COLOR_RGB2HLS);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void hls2rgb(hls2rgb_in *in, hls2rgb_out *out)
@@ -211,7 +211,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::cvtColor(*img, *dstImg, cv::COLOR_HLS2RGB);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void split(split_in *in, split_out *out)
@@ -225,7 +225,7 @@ public:
         {
             auto dsti = new cv::Mat();
             *dsti = dst[i];
-            out->handles.push_back(matHandles.add(dsti, in->_scriptID));
+            out->handles.push_back(matHandles.add(dsti, in->_.scriptID));
         }
         delete[] dst;
     }
@@ -241,7 +241,7 @@ public:
         if(srcv.size() < 2) throw std::runtime_error("invalid number of channels");
         cv::Mat *img = new cv::Mat();
         cv::merge(&srcv[0], srcv.size(), *img);
-        out->handle = matHandles.add(img, in->_scriptID);
+        out->handle = matHandles.add(img, in->_.scriptID);
     }
 
     void mixChannels(mixChannels_in *in, mixChannels_out *out)
@@ -324,7 +324,7 @@ public:
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int interp = parseInterp(in->interpolation, sim_im_interp_linear);
         cv::resize(*img, *dstImg, cv::Size(in->width, in->height), 0, 0, interp);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void size(size_in *in, size_out *out)
@@ -483,7 +483,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         *dstImg = cv::abs(*img);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void absdiff(absdiff_in *in, absdiff_out *out)
@@ -492,7 +492,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::absdiff(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void absdiffK(absdiffK_in *in, absdiffK_out *out)
@@ -500,7 +500,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::absdiff(*img, in->k, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void add(add_in *in, add_out *out)
@@ -509,7 +509,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::add(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void addK(addK_in *in, addK_out *out)
@@ -517,7 +517,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::add(*img, in->k, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void subtract(subtract_in *in, subtract_out *out)
@@ -526,7 +526,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::subtract(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void subtractK(subtractK_in *in, subtractK_out *out)
@@ -534,7 +534,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::subtract(*img, in->k, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void multiply(multiply_in *in, multiply_out *out)
@@ -543,7 +543,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::multiply(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void divide(divide_in *in, divide_out *out)
@@ -552,7 +552,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::divide(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void divideK(divideK_in *in, divideK_out *out)
@@ -560,7 +560,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::divide(in->k, *img, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     int parseCmpOp(int o, int def)
@@ -591,7 +591,7 @@ public:
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         int op = parseCmpOp(in->op, cv::CMP_EQ);
         cv::compare(*img1, *img2, *dstImg, op);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void compareK(compareK_in *in, compareK_out *out)
@@ -600,7 +600,7 @@ public:
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int op = parseCmpOp(in->op, cv::CMP_EQ);
         cv::compare(*img, in->k, *dstImg, op);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     int parseReduceOp(int o, int def)
@@ -626,7 +626,7 @@ public:
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int op = parseReduceOp(in->op, cv::REDUCE_SUM);
         cv::reduce(*img, *dstImg, in->dim, op);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void repeat(repeat_in *in, repeat_out *out)
@@ -634,7 +634,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::repeat(*img, in->ny, in->nx, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     int parseFlipOp(int o, int def)
@@ -658,7 +658,7 @@ public:
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         int op = parseFlipOp(in->op, 0);
         cv::flip(*img, *dstImg, op);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void log(log_in *in, log_out *out)
@@ -666,7 +666,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::log(*img, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void exp(exp_in *in, exp_out *out)
@@ -674,7 +674,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::exp(*img, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void pow(pow_in *in, pow_out *out)
@@ -682,7 +682,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::pow(*img, in->power, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void sqrt(sqrt_in *in, sqrt_out *out)
@@ -690,7 +690,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::sqrt(*img, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void addWeighted(addWeighted_in *in, addWeighted_out *out)
@@ -699,7 +699,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::addWeighted(*img1, in->alpha, *img2, in->beta, in->gamma, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void scaleAdd(scaleAdd_in *in, scaleAdd_out *out)
@@ -708,7 +708,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::scaleAdd(*img1, in->alpha, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void magnitude(magnitude_in *in, magnitude_out *out)
@@ -717,7 +717,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = new cv::Mat();
         cv::magnitude(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void phase(phase_in *in, phase_out *out)
@@ -726,7 +726,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = new cv::Mat();
         cv::phase(*img1, *img2, *dstImg, in->angleInDegrees);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void polar2cart(polar2cart_in *in, polar2cart_out *out)
@@ -736,8 +736,8 @@ public:
         cv::Mat *dstImg1 = new cv::Mat();
         cv::Mat *dstImg2 = new cv::Mat();
         cv::cartToPolar(*img1, *img2, *dstImg1, *dstImg2, in->angleInDegrees);
-        out->handle1 = matHandles.add(dstImg1, in->_scriptID);
-        out->handle2 = matHandles.add(dstImg2, in->_scriptID);
+        out->handle1 = matHandles.add(dstImg1, in->_.scriptID);
+        out->handle2 = matHandles.add(dstImg2, in->_.scriptID);
     }
 
     void cart2polar(cart2polar_in *in, cart2polar_out *out)
@@ -747,8 +747,8 @@ public:
         cv::Mat *dstImg1 = new cv::Mat();
         cv::Mat *dstImg2 = new cv::Mat();
         cv::cartToPolar(*img1, *img2, *dstImg1, *dstImg2, in->angleInDegrees);
-        out->handle1 = matHandles.add(dstImg1, in->_scriptID);
-        out->handle2 = matHandles.add(dstImg2, in->_scriptID);
+        out->handle1 = matHandles.add(dstImg1, in->_.scriptID);
+        out->handle2 = matHandles.add(dstImg2, in->_.scriptID);
     }
 
     void bitwiseAnd(bitwiseAnd_in *in, bitwiseAnd_out *out)
@@ -757,7 +757,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::bitwise_and(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void bitwiseAndK(bitwiseAndK_in *in, bitwiseAndK_out *out)
@@ -765,7 +765,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::bitwise_and(*img, in->k, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void bitwiseOr(bitwiseOr_in *in, bitwiseOr_out *out)
@@ -774,7 +774,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::bitwise_or(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void bitwiseOrK(bitwiseOrK_in *in, bitwiseOrK_out *out)
@@ -782,7 +782,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::bitwise_or(*img, in->k, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void bitwiseXor(bitwiseXor_in *in, bitwiseXor_out *out)
@@ -791,7 +791,7 @@ public:
         auto img2 = matHandles.get(in->handle2);
         cv::Mat *dstImg = in->inPlace ? img1 : new cv::Mat();
         cv::bitwise_xor(*img1, *img2, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void bitwiseXorK(bitwiseXorK_in *in, bitwiseXorK_out *out)
@@ -799,7 +799,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::bitwise_xor(*img, in->k, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void bitwiseNot(bitwiseNot_in *in, bitwiseNot_out *out)
@@ -807,7 +807,7 @@ public:
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         cv::bitwise_not(*img, *dstImg);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     int parseDistanceType(int d, int def)
@@ -845,7 +845,7 @@ public:
         int dt = parseDistanceType(in->distanceType, cv::DIST_L2);
         int ms = parseMaskSize(in->maskSize, cv::DIST_MASK_PRECISE);
         cv::distanceTransform(*img, *dstImg, dt, ms);
-        out->handle = matHandles.add(dstImg, in->_scriptID);
+        out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
 
     void writeToVisionSensor(writeToVisionSensor_in *in, writeToVisionSensor_out *out)
@@ -885,7 +885,7 @@ public:
             cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(*img);
             cv::cvtColor(*img, *img, cv::COLOR_RGB2BGR);
             simReleaseBuffer(reinterpret_cast<simChar*>(data));
-            out->handle = matHandles.add(img, in->_scriptID);
+            out->handle = matHandles.add(img, in->_.scriptID);
         }
         else
         {
@@ -926,7 +926,7 @@ public:
 
         if(videoCapture[in->deviceIndex].read(*img))
         {
-            out->handle = matHandles.add(img, in->_scriptID);
+            out->handle = matHandles.add(img, in->_.scriptID);
         }
         else
         {
