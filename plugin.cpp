@@ -11,6 +11,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 //#define SIMD_OPENCV_ENABLE
@@ -155,6 +156,15 @@ public:
     {
         auto img = matHandles.get(in->handle);
         cv::imwrite(in->filename, *img);
+    }
+
+    void encode(encode_in *in, encode_out *out)
+    {
+        auto img = matHandles.get(in->handle);
+        std::string ext = std::string{"."} + in->format;
+        std::vector<uchar> buf;
+        cv::imencode(ext, *img, buf);
+        std::transform(buf.begin(), buf.end(), std::back_inserter(out->output), [](uchar c) {return c;});
     }
 
     void convert(convert_in *in, convert_out *out)

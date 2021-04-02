@@ -103,6 +103,22 @@
         <return>
         </return>
     </command>
+    <command name="encode">
+        <description>Encode the image to a memory buffer.</description>
+        <params>
+            <param name="handle" type="string">
+                <description>handle to image</description>
+            </param>
+            <param name="format" type="string">
+                <description>image format (e.g. "PNG", "JPG", "BMP")</description>
+            </param>
+        </params>
+        <return>
+            <param name="output" type="string">
+                <description>output buffer</description>
+            </param>
+        </return>
+    </command>
     <command name="convert">
         <description>Convert the image to a different format.</description>
         <params>
