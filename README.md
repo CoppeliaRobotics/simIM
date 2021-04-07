@@ -7,7 +7,7 @@ Requires OpenCV2 or later.
 1. Install required packages for [libPlugin](https://github.com/CoppeliaRobotics/libPlugin): see libPlugin's README
 2. Checkout and compile
 ```text
-$ git clone --recursive https://github.com/CoppeliaRobotics/simExtImage.git
+$ git clone --recursive https://github.com/CoppeliaRobotics/simExtIM.git
 $ cmake .
 $ cmake --build .
 ```
