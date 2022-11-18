@@ -862,7 +862,7 @@ public:
     {
         auto img = matHandles.get(in->handle);
 
-        simInt resolution[2];
+        int resolution[2];
         if(-1 == simGetVisionSensorResolution(in->sensorHandle, &resolution[0]))
             throw std::runtime_error("failed to get sensor resolution");
 
@@ -871,13 +871,13 @@ public:
 
         cv::Mat tmp;
         cv::cvtColor(*img, tmp, cv::COLOR_BGR2RGB);
-        if(-1 == simSetVisionSensorCharImage(in->sensorHandle, (const simUChar*)tmp.data))
+        if(-1 == simSetVisionSensorCharImage(in->sensorHandle, (const unsigned char*)tmp.data))
             throw std::runtime_error("failed to write to vision sensor");
     }
 
     void readFromVisionSensor(readFromVisionSensor_in *in, readFromVisionSensor_out *out)
     {
-        simInt resolution[2];
+        int resolution[2];
         if(-1 == simGetVisionSensorResolution(in->sensorHandle, &resolution[0]))
             throw std::runtime_error("failed to get sensor resolution");
 
@@ -889,12 +889,12 @@ public:
             throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->cols % img->rows).str());
         }
 
-        simUChar* data = simGetVisionSensorCharImage(in->sensorHandle, &resolution[0], &resolution[1]);
+        unsigned char* data = simGetVisionSensorCharImage(in->sensorHandle, &resolution[0], &resolution[1]);
         if(data)
         {
             cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(*img);
             cv::cvtColor(*img, *img, cv::COLOR_RGB2BGR);
-            simReleaseBuffer(reinterpret_cast<simChar*>(data));
+            simReleaseBuffer(reinterpret_cast<char*>(data));
             out->handle = matHandles.add(img, in->_.scriptID);
         }
         else
