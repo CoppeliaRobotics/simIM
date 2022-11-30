@@ -13,6 +13,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/aruco.hpp>
 
 //#define SIMD_OPENCV_ENABLE
 //#include <Simd/SimdLib.hpp>
@@ -51,6 +52,7 @@ namespace cv
 #endif
 
 template<> std::string sim::Handle<cv::Mat>::tag() { return "cv.Mat"; }
+template<> std::string sim::Handle<cv::aruco::Dictionary>::tag() { return "cv.aruco.Dictionary"; }
 
 class Plugin : public sim::Plugin
 {
@@ -174,6 +176,34 @@ public:
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
         img->convertTo(*dstImg, format, in->scale);
         out->handle = matHandles.add(dstImg, in->_.scriptID);
+    }
+
+    void getFormat(getFormat_in *in, getFormat_out *out)
+    {
+        auto img = matHandles.get(in->handle);
+        switch(img->type())
+        {
+        case CV_8UC1:
+            out->format = sim_im_fmt_8UC1;
+            break;
+        case CV_8UC3:
+            out->format = sim_im_fmt_8UC3;
+            break;
+        case CV_8UC4:
+            out->format = sim_im_fmt_8UC4;
+            break;
+        case CV_32FC1:
+            out->format = sim_im_fmt_32FC1;
+            break;
+        case CV_32FC3:
+            out->format = sim_im_fmt_32FC3;
+            break;
+        case CV_32FC4:
+            out->format = sim_im_fmt_32FC4;
+            break;
+        default:
+            throw sim::exception("unhandled OpenCV format: %d", img->type());
+        }
     }
 
     void rgb2gray(rgb2gray_in *in, rgb2gray_out *out)
@@ -946,9 +976,84 @@ public:
         }
     }
 
+    void writeToTexture(writeToTexture_in *in, writeToTexture_out *out)
+    {
+        auto img = matHandles.get(in->handle);
+
+        cv::Mat tmp;
+        cv::cvtColor(*img, tmp, cv::COLOR_BGR2RGB);
+        if(-1 == simWriteTexture(in->textureId,0,reinterpret_cast<const char*>(tmp.data),0,0,0,0,0))
+            throw std::runtime_error("failed to write to texture");
+    }
+
+    void getMarkerDictionary(getMarkerDictionary_in *in, getMarkerDictionary_out *out)
+    {
+        cv::aruco::PREDEFINED_DICTIONARY_NAME d;
+#define ARUCO_DICT(x) case sim_im_dict##x: d = cv::aruco::DICT##x; break
+        switch(in->type)
+        {
+        ARUCO_DICT(_4X4_50);
+        ARUCO_DICT(_4X4_100);
+        ARUCO_DICT(_4X4_250);
+        ARUCO_DICT(_4X4_1000);
+        ARUCO_DICT(_5X5_50);
+        ARUCO_DICT(_5X5_100);
+        ARUCO_DICT(_5X5_250);
+        ARUCO_DICT(_5X5_1000);
+        ARUCO_DICT(_6X6_50);
+        ARUCO_DICT(_6X6_100);
+        ARUCO_DICT(_6X6_250);
+        ARUCO_DICT(_6X6_1000);
+        ARUCO_DICT(_7X7_50);
+        ARUCO_DICT(_7X7_100);
+        ARUCO_DICT(_7X7_250);
+        ARUCO_DICT(_7X7_1000);
+        ARUCO_DICT(_ARUCO_ORIGINAL);
+        ARUCO_DICT(_APRILTAG_16h5);
+        ARUCO_DICT(_APRILTAG_25h9);
+        ARUCO_DICT(_APRILTAG_36h10);
+        ARUCO_DICT(_APRILTAG_36h11);
+        default:
+            throw sim::exception("invalid dictionary type");
+        }
+#undef ARUCO_DICT
+        cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(d);
+        out->handle = dictHandles.add(dictionary, in->_.scriptID);
+    }
+
+    void drawMarker(drawMarker_in *in, drawMarker_out *out)
+    {
+        auto dictionary = dictHandles.get(in->dictionaryHandle);
+        cv::Mat *img = in->handle != "" ? matHandles.get(in->handle) : new cv::Mat();
+        cv::aruco::drawMarker(dictionary, in->markerId, in->size, *img, in->borderSize);
+        out->handle = in->handle == "" ? matHandles.add(img, in->_.scriptID) : in->handle;
+    }
+
+    void detectMarkers(detectMarkers_in *in, detectMarkers_out *out)
+    {
+        cv::Mat *img = matHandles.get(in->handle);
+        std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
+        cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
+        auto dictionary = dictHandles.get(in->dictionaryHandle);
+        cv::aruco::detectMarkers(*img, dictionary, markerCorners, out->markerIds, parameters, rejectedCandidates);
+        for(const auto &markerCorner : markerCorners) {
+            for(const auto &point : markerCorner) {
+                out->corners.push_back(point.x);
+                out->corners.push_back(point.y);
+            }
+        }
+        for(const auto &markerCorner : rejectedCandidates) {
+            for(const auto &point : markerCorner) {
+                out->rejectedCandidates.push_back(point.x);
+                out->rejectedCandidates.push_back(point.y);
+            }
+        }
+    }
+
 private:
     std::map<int, cv::VideoCapture> videoCapture;
     sim::Handles<cv::Mat> matHandles;
+    sim::HandlesX<cv::aruco::Dictionary> dictHandles;
 };
 
 SIM_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)

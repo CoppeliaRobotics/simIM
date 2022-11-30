@@ -141,6 +141,19 @@
             </param>
         </return>
     </command>
+    <command name="getFormat">
+        <description>Get the format of the image.</description>
+        <params>
+            <param name="handle" type="string">
+                <description>handle to image</description>
+            </param>
+        </params>
+        <return>
+            <param name="format" type="int">
+                <description>image format (see <enum-ref name="format" />)</description>
+            </param>
+        </return>
+    </command>
     <command name="rgb2gray">
         <description>Convert the specified RGB image to gray.</description>
         <params>
@@ -1471,6 +1484,144 @@
         <return>
             <param name="handle" type="string">
                 <description>handle to new image (or existing image if given)</description>
+            </param>
+        </return>
+    </command>
+    <command name="writeToTexture">
+        <description>Write image to texture.</description>
+        <params>
+            <param name="handle" type="string">
+                <description>handle to existing image</description>
+            </param>
+            <param name="textureId" type="int">
+                <description>texture id</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <enum name="dict_type" item-prefix="dict" base="9500">
+        <item name="_4X4_50">
+            <description>4x4 bits, minimum hamming distance between any two codes = 4, 50 codes</description>
+        </item>
+        <item name="_4X4_100">
+            <description>4x4 bits, minimum hamming distance between any two codes = 3, 100 codes</description>
+        </item>
+        <item name="_4X4_250">
+            <description>4x4 bits, minimum hamming distance between any two codes = 3, 250 codes</description>
+        </item>
+        <item name="_4X4_1000">
+            <description>4x4 bits, minimum hamming distance between any two codes = 2, 1000 codes</description>
+        </item>
+        <item name="_5X5_50">
+            <description>5x5 bits, minimum hamming distance between any two codes = 8, 50 codes</description>
+        </item>
+        <item name="_5X5_100">
+            <description>5x5 bits, minimum hamming distance between any two codes = 7, 100 codes</description>
+        </item>
+        <item name="_5X5_250">
+            <description>5x5 bits, minimum hamming distance between any two codes = 6, 250 codes</description>
+        </item>
+        <item name="_5X5_1000">
+            <description>5x5 bits, minimum hamming distance between any two codes = 5, 1000 codes</description>
+        </item>
+        <item name="_6X6_50">
+            <description>6x6 bits, minimum hamming distance between any two codes = 13, 50 codes</description>
+        </item>
+        <item name="_6X6_100">
+            <description>6x6 bits, minimum hamming distance between any two codes = 12, 100 codes</description>
+        </item>
+        <item name="_6X6_250">
+            <description>6x6 bits, minimum hamming distance between any two codes = 11, 250 codes</description>
+        </item>
+        <item name="_6X6_1000">
+            <description>6x6 bits, minimum hamming distance between any two codes = 9, 1000 codes</description>
+        </item>
+        <item name="_7X7_50">
+            <description>7x7 bits, minimum hamming distance between any two codes = 19, 50 codes</description>
+        </item>
+        <item name="_7X7_100">
+            <description>7x7 bits, minimum hamming distance between any two codes = 18, 100 codes</description>
+        </item>
+        <item name="_7X7_250">
+            <description>7x7 bits, minimum hamming distance between any two codes = 17, 250 codes</description>
+        </item>
+        <item name="_7X7_1000">
+            <description>7x7 bits, minimum hamming distance between any two codes = 14, 1000 codes</description>
+        </item>
+        <item name="_ARUCO_ORIGINAL">
+            <description>6x6 bits, minimum hamming distance between any two codes = 3, 1024 codes</description>
+        </item>
+        <item name="_APRILTAG_16h5">
+            <description>4x4 bits, minimum hamming distance between any two codes = 5, 30 codes</description>
+        </item>
+        <item name="_APRILTAG_25h9">
+            <description>5x5 bits, minimum hamming distance between any two codes = 9, 35 codes</description>
+        </item>
+        <item name="_APRILTAG_36h10">
+            <description>6x6 bits, minimum hamming distance between any two codes = 10, 2320 codes</description>
+        </item>
+        <item name="_APRILTAG_36h11">
+            <description>6x6 bits, minimum hamming distance between any two codes = 11, 587 codes</description>
+        </item>
+    </enum>
+    <command name="getMarkerDictionary">
+        <description>Get the specified marker dictionary.</description>
+        <params>
+            <param name="type" type="int">
+                <description>dictionary type (see <enum-ref name="dict_type" />)</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="string">
+                <description>handle to the dictionary</description>
+            </param>
+        </return>
+    </command>
+    <command name="drawMarker">
+        <description>Get the specified marker dictionary.</description>
+        <params>
+            <param name="dictionaryHandle" type="string">
+                <description>dictionary handle created with <cmd-ref name="getMarkerDictionary" /></description>
+            </param>
+            <param name="markerId" type="int">
+                <description>marker identifier</description>
+            </param>
+            <param name="size" type="int">
+                <description>size in pixels</description>
+            </param>
+            <param name="handle" type="string" default='""'>
+                <description>handle to existing image, or "" to create and return a new image</description>
+            </param>
+            <param name="borderSize" type="int" default="1">
+                <description>border size</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="string">
+                <description>handle to new image (or existing image if given)</description>
+            </param>
+        </return>
+    </command>
+    <command name="detectMarkers">
+        <description>Detect markers in the specified image.</description>
+        <params>
+            <param name="handle" type="string">
+                <description>handle to existing image</description>
+            </param>
+            <param name="dictionaryHandle" type="string">
+                <description>dictionary handle created with <cmd-ref name="getMarkerDictionary" /></description>
+            </param>
+        </params>
+        <return>
+            <param name="corners" type="table" item-type="float">
+                <description>corners of detected markers (4 xy pairs clockwise starting top-left)</description>
+            </param>
+            <param name="markerIds" type="table" item-type="int">
+                <description>ids of detected markers</description>
+            </param>
+            <param name="rejectedCandidates" type="table" item-type="float">
+                <description>corners of rejected candidates (4 xy pairs clockwise starting top-left)</description>
             </param>
         </return>
     </command>

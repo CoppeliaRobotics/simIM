@@ -5,7 +5,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_MACOSX_RPATH 1)
 
 find_package(Boost COMPONENTS thread REQUIRED)
-find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)
+find_package(OpenCV COMPONENTS core imgproc highgui aruco REQUIRED)
 
 if(${OpenCV_VERSION} VERSION_GREATER 3.0.0)
     # since opencv3, imread is in the imgcodecs module, VideoCapture in videoio

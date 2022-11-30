@@ -9,4 +9,4 @@ for i=1,2000 do
 end
 simIM.write(im,scene_path..'/test-set-get.png')
 simIM.destroy(im)
-print(simIM.numActiveHandles()..' active handles')
+--print(simIM.numActiveHandles()..' active handles')
