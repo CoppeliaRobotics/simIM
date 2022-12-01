@@ -980,9 +980,12 @@ public:
     {
         auto img = matHandles.get(in->handle);
 
+        if(img->type() != CV_8UC3)
+            throw std::runtime_error("image must be 8UC3");
+
         cv::Mat tmp;
         cv::cvtColor(*img, tmp, cv::COLOR_BGR2RGB);
-        if(-1 == simWriteTexture(in->textureId,0,reinterpret_cast<const char*>(tmp.data),0,0,0,0,0))
+        if(-1 == simWriteTexture(in->textureId,0,reinterpret_cast<const char*>(tmp.data),0,0,img->cols,img->rows,0))
             throw std::runtime_error("failed to write to texture");
     }
 
