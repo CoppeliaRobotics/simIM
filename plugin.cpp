@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 #include "simPlusPlus/Plugin.h"
-#include "simPlusPlus/Handle.h"
+#include "simPlusPlus/Handles.h"
 #include "plugin.h"
 #include "stubs.h"
 #include "config.h"
@@ -50,9 +50,6 @@ namespace cv
     };
 }
 #endif
-
-template<> std::string sim::Handle<cv::Mat>::tag() { return "cv.Mat"; }
-template<> std::string sim::Handle<cv::aruco::Dictionary>::tag() { return "cv.aruco.Dictionary"; }
 
 class Plugin : public sim::Plugin
 {
@@ -1055,8 +1052,8 @@ public:
 
 private:
     std::map<int, cv::VideoCapture> videoCapture;
-    sim::Handles<cv::Mat> matHandles;
-    sim::HandlesX<cv::aruco::Dictionary> dictHandles;
+    sim::Handles<cv::Mat*> matHandles{"cv.Mat"};
+    sim::Handles<cv::Ptr<cv::aruco::Dictionary>> dictHandles{"cv.aruco.Dictionary"};
 };
 
 SIM_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)
