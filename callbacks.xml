@@ -1582,7 +1582,7 @@
         <description>Get the specified marker dictionary.</description>
         <params>
             <param name="dictionaryHandle" type="string">
-                <description>dictionary handle created with <cmd-ref name="getMarkerDictionary" /></description>
+                <description>dictionary handle created with <command-ref name="getMarkerDictionary" /></description>
             </param>
             <param name="markerId" type="int">
                 <description>marker identifier</description>
@@ -1610,7 +1610,7 @@
                 <description>handle to existing image</description>
             </param>
             <param name="dictionaryHandle" type="string">
-                <description>dictionary handle created with <cmd-ref name="getMarkerDictionary" /></description>
+                <description>dictionary handle created with <command-ref name="getMarkerDictionary" /></description>
             </param>
         </params>
         <return>
