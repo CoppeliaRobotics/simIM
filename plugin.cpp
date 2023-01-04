@@ -14,7 +14,9 @@
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/aruco.hpp>
-
+#include <opencv2/objdetect/aruco_dictionary.hpp>
+#include <opencv2/objdetect/aruco_board.hpp>
+#include <opencv2/objdetect/aruco_detector.hpp>
 //#define SIMD_OPENCV_ENABLE
 //#include <Simd/SimdLib.hpp>
 
@@ -988,7 +990,7 @@ public:
 
     void getMarkerDictionary(getMarkerDictionary_in *in, getMarkerDictionary_out *out)
     {
-        cv::aruco::PREDEFINED_DICTIONARY_NAME d;
+        cv::aruco::PredefinedDictionaryType d;
 #define ARUCO_DICT(x) case sim_im_dict##x: d = cv::aruco::DICT##x; break
         switch(in->type)
         {
@@ -1017,15 +1019,21 @@ public:
             throw sim::exception("invalid dictionary type");
         }
 #undef ARUCO_DICT
-        cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(d);
-        out->handle = dictHandles.add(dictionary, in->_.scriptID);
+        cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(d);
+        //cv::aruco::ArucoDetector detector();
+        //in opencv<=4.6
+        //cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(d);
+        //FIXME how to add it without pointer
+        //out->handle = dictHandles.add( dictionary, in->_.scriptID);
     }
 
     void drawMarker(drawMarker_in *in, drawMarker_out *out)
     {
-        auto dictionary = dictHandles.get(in->dictionaryHandle);
+        //auto dictionary = dictHandles.get(in->dictionaryHandle);
         cv::Mat *img = in->handle != "" ? matHandles.get(in->handle) : new cv::Mat();
-        cv::aruco::drawMarker(dictionary, in->markerId, in->size, *img, in->borderSize);
+        cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+
+        cv::aruco::generateImageMarker(dictionary, in->markerId, in->size, *img, in->borderSize);
         out->handle = in->handle == "" ? matHandles.add(img, in->_.scriptID) : in->handle;
     }
 
@@ -1033,9 +1041,14 @@ public:
     {
         cv::Mat *img = matHandles.get(in->handle);
         std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
-        cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
-        auto dictionary = dictHandles.get(in->dictionaryHandle);
-        cv::aruco::detectMarkers(*img, dictionary, markerCorners, out->markerIds, parameters, rejectedCandidates);
+        const cv::aruco::DetectorParameters &parameters = cv::aruco::DetectorParameters();
+        //auto dictionary = dictHandles.get(in->dictionaryHandle);
+        cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+
+        cv::aruco::ArucoDetector detector(dictionary , parameters);
+        detector.detectMarkers(*img, markerCorners, out->markerIds, rejectedCandidates);
+        //opencv before <=4.6
+        //cv::aruco::detectMarkers(*img, dictionary, markerCorners, out->markerIds, parameters, rejectedCandidates);
         for(const auto &markerCorner : markerCorners) {
             for(const auto &point : markerCorner) {
                 out->corners.push_back(point.x);
