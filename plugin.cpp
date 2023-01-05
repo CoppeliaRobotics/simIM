@@ -51,6 +51,9 @@ namespace cv
 }
 #endif
 
+#define VERSION_VALUE(x,y,z) (10000 * (x) + 100 * (y) + (z))
+#define CV_VERSION_VALUE VERSION_VALUE(CV_VERSION_MAJOR, CV_VERSION_MINOR, CV_VERSION_REVISION)
+
 class Plugin : public sim::Plugin
 {
 public:
@@ -988,7 +991,11 @@ public:
 
     void getMarkerDictionary(getMarkerDictionary_in *in, getMarkerDictionary_out *out)
     {
+#if CV_VERSION_VALUE < VERSION_VALUE(4,7,0)
         cv::aruco::PREDEFINED_DICTIONARY_NAME d;
+#else
+        cv::aruco::PredefinedDictionaryType d;
+#endif
 #define ARUCO_DICT(x) case sim_im_dict##x: d = cv::aruco::DICT##x; break
         switch(in->type)
         {
@@ -1017,7 +1024,15 @@ public:
             throw sim::exception("invalid dictionary type");
         }
 #undef ARUCO_DICT
-        cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(d);
+#if CV_VERSION_VALUE < VERSION_VALUE(4,7,0)
+        auto dictionary = cv::aruco::getPredefinedDictionary(d);
+#else
+        static std::map<cv::aruco::PredefinedDictionaryType, cv::aruco::Dictionary> predefinedDictionaries;
+        auto it = predefinedDictionaries.find(d);
+        if(it == predefinedDictionaries.end())
+            predefinedDictionaries[d] = cv::aruco::getPredefinedDictionary(d);
+        auto dictionary = &(predefinedDictionaries[d]);
+#endif
         out->handle = dictHandles.add(dictionary, in->_.scriptID);
     }
 
@@ -1025,7 +1040,11 @@ public:
     {
         auto dictionary = dictHandles.get(in->dictionaryHandle);
         cv::Mat *img = in->handle != "" ? matHandles.get(in->handle) : new cv::Mat();
+#if CV_VERSION_VALUE < VERSION_VALUE(4,7,0)
         cv::aruco::drawMarker(dictionary, in->markerId, in->size, *img, in->borderSize);
+#else
+        cv::aruco::generateImageMarker(*dictionary, in->markerId, in->size, *img, in->borderSize);
+#endif
         out->handle = in->handle == "" ? matHandles.add(img, in->_.scriptID) : in->handle;
     }
 
@@ -1033,9 +1052,15 @@ public:
     {
         cv::Mat *img = matHandles.get(in->handle);
         std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
-        cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
         auto dictionary = dictHandles.get(in->dictionaryHandle);
+#if CV_VERSION_VALUE < VERSION_VALUE(4,7,0)
+        cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
         cv::aruco::detectMarkers(*img, dictionary, markerCorners, out->markerIds, parameters, rejectedCandidates);
+#else
+        const cv::aruco::DetectorParameters &parameters = cv::aruco::DetectorParameters();
+        cv::aruco::ArucoDetector detector(*dictionary, parameters);
+        detector.detectMarkers(*img, markerCorners, out->markerIds, rejectedCandidates);
+#endif
         for(const auto &markerCorner : markerCorners) {
             for(const auto &point : markerCorner) {
                 out->corners.push_back(point.x);
@@ -1053,7 +1078,13 @@ public:
 private:
     std::map<int, cv::VideoCapture> videoCapture;
     sim::Handles<cv::Mat*> matHandles{"cv.Mat"};
-    sim::Handles<cv::Ptr<cv::aruco::Dictionary>> dictHandles{"cv.aruco.Dictionary"};
+    sim::Handles<
+#if CV_VERSION_VALUE < VERSION_VALUE(4,7,0)
+            cv::Ptr<cv::aruco::Dictionary>
+#else
+            cv::aruco::Dictionary*
+#endif
+        > dictHandles{"cv.aruco.Dictionary"};
 };
 
 SIM_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)
