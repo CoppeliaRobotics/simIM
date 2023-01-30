@@ -892,24 +892,19 @@ public:
     {
         auto img = matHandles.get(in->handle);
 
-        int resolution[2];
-        if(-1 == simGetVisionSensorRes(in->sensorHandle, &resolution[0]))
-            throw std::runtime_error("failed to get sensor resolution");
+        auto resolution = sim::getVisionSensorRes(in->sensorHandle);
 
         if(img->cols != resolution[0] || img->rows != resolution[1])
             throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->cols % img->rows).str());
 
         cv::Mat tmp;
         cv::cvtColor(*img, tmp, cv::COLOR_BGR2RGB);
-        if(-1 == simSetVisionSensorImg(in->sensorHandle,(const unsigned char*)tmp.data,0,NULL,NULL))
-            throw std::runtime_error("failed to write to vision sensor");
+        sim::setVisionSensorImg(in->sensorHandle, (const unsigned char*)tmp.data);
     }
 
     void readFromVisionSensor(readFromVisionSensor_in *in, readFromVisionSensor_out *out)
     {
-        int resolution[2];
-        if(-1 == simGetVisionSensorRes(in->sensorHandle, &resolution[0]))
-            throw std::runtime_error("failed to get sensor resolution");
+        auto resolution = sim::getVisionSensorRes(in->sensorHandle);
 
         cv::Mat *img = in->handle != "" ? matHandles.get(in->handle) : new cv::Mat(resolution[1], resolution[0], CV_8UC3);
 
@@ -919,20 +914,11 @@ public:
             throw std::runtime_error((boost::format("sensor resolution (%dx%d) does not match image size (%dx%d)") % resolution[0] % resolution[1] % img->cols % img->rows).str());
         }
 
-        unsigned char* data = simGetVisionSensorImg(in->sensorHandle,0,0.0,NULL,NULL,resolution);
-        if(data)
-        {
-            cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(*img);
-            cv::cvtColor(*img, *img, cv::COLOR_RGB2BGR);
-            simReleaseBuffer(reinterpret_cast<char*>(data));
-            out->handle = matHandles.add(img, in->_.scriptID);
-        }
-        else
-        {
-            if(in->handle == "") delete img;
-            out->handle = -1;
-            throw std::runtime_error("failed to read from vision sensor");
-        }
+        unsigned char* data = sim::getVisionSensorImg(in->sensorHandle,0,0.0);
+        cv::Mat(resolution[1], resolution[0], CV_8UC3, data).copyTo(*img);
+        cv::cvtColor(*img, *img, cv::COLOR_RGB2BGR);
+        sim::releaseBuffer(reinterpret_cast<char*>(data));
+        out->handle = matHandles.add(img, in->_.scriptID);
     }
 
     void openVideoCapture(openVideoCapture_in *in, openVideoCapture_out *out)
@@ -985,8 +971,7 @@ public:
 
         cv::Mat tmp;
         cv::cvtColor(*img, tmp, cv::COLOR_BGR2RGB);
-        if(-1 == simWriteTexture(in->textureId,0,reinterpret_cast<const char*>(tmp.data),0,0,img->cols,img->rows,0))
-            throw std::runtime_error("failed to write to texture");
+        sim::writeTexture(in->textureId, 0, reinterpret_cast<const char*>(tmp.data), 0, 0, img->cols, img->rows, 0);
     }
 
     void getMarkerDictionary(getMarkerDictionary_in *in, getMarkerDictionary_out *out)
