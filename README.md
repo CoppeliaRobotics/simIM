@@ -7,8 +7,8 @@ Requires OpenCV2 or later.
 1. Install required packages for simStubsGen: see simStubsGen's [README](https://github.com/CoppeliaRobotics/include/blob/master/simStubsGen/README.md)
 2. Checkout, compile and install into CoppeliaSim:
 ```sh
-$ git clone https://github.com/CoppeliaRobotics/simExtIM.git
-$ cd simExtIM
+$ git clone https://github.com/CoppeliaRobotics/simIM.git
+$ cd simIM
 $ git checkout coppeliasim-v4.5.0-rev0
 $ mkdir -p build && cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
