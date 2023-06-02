@@ -1,4 +1,4 @@
-local simIM=loadPlugin'simIM'
+local simIM=loadPlugin'simIM';
 
 function simIM.numActiveHandles()
     local h=simIM.handles()
@@ -43,6 +43,6 @@ function simIM.getMarkerBitSize(dictType)
     if dictType==simIM.dict_type._ARUCO_ORIGINAL then return 6 end
 end
 
-(require'simIM-typecheck')(simIM)
+;(require'simIM-typecheck')(simIM)
 
 return simIM
