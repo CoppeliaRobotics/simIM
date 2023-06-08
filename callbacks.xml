@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <?xml-stylesheet type="text/xsl" href="callbacks.xsl"?>
 
-<plugin name="IM" author="federico.ferri.it@gmail.com">
+<plugin name="simIM" author="federico.ferri.it@gmail.com">
     <description>Plugin for processing images</description>
     <enum name="format" item-prefix="fmt" base="3600">
         <item name="_8UC1">
@@ -32,7 +32,7 @@
             <param name="height" type="int">
                 <description>height</description>
             </param>
-            <param name="format" type="int" default="sim_im_fmt_8UC3">
+            <param name="format" type="int" default="simim_fmt_8UC3">
                 <description>image format (see <enum-ref name="format" />)</description>
             </param>
             <param name="initialValue" type="int" default="0">
@@ -57,7 +57,7 @@
             <param name="data" type="string">
                 <description>image data</description>
             </param>
-            <param name="format" type="int" default="sim_im_fmt_8UC3">
+            <param name="format" type="int" default="simim_fmt_8UC3">
                 <description>image format (see <enum-ref name="format" />)</description>
             </param>
         </params>
@@ -353,7 +353,7 @@
             <param name="height" type="int">
                 <description>height of the new image</description>
             </param>
-            <param name="interpolation" type="int" default="sim_im_interp_linear">
+            <param name="interpolation" type="int" default="simim_interp_linear">
                 <description>type of interpolation (see <enum-ref name="interp" />)</description>
             </param>
             <param name="inPlace" type="bool" default="false">
@@ -681,7 +681,7 @@
             <param name="pos" type="table" item-type="int" size="2">
                 <description>x, y coordinates of the origin (bottom-left corner of the string)</description>
             </param>
-            <param name="fontFace" type="int" default="sim_im_fontface_simplex">
+            <param name="fontFace" type="int" default="simim_fontface_simplex">
                 <description>font face (see <enum-ref name="fontFace" />)</description>
             </param>
             <param name="italic" type="bool" default="false">
@@ -712,7 +712,7 @@
             <param name="str" type="string">
                 <description>text string to be drawn</description>
             </param>
-            <param name="fontFace" type="int" default="sim_im_fontface_simplex">
+            <param name="fontFace" type="int" default="simim_fontface_simplex">
                 <description>font face (see <enum-ref name="fontFace" />)</description>
             </param>
             <param name="italic" type="bool" default="false">
@@ -1406,10 +1406,10 @@
             <param name="handle" type="string">
                 <description>handle to image</description>
             </param>
-            <param name="distanceType" type="int" default="sim_im_dist_L2">
+            <param name="distanceType" type="int" default="simim_dist_L2">
                 <description>type of distance (see <enum-ref name="dist" />)</description>
             </param>
-            <param name="maskSize" type="int" default="sim_im_masksize_precise">
+            <param name="maskSize" type="int" default="simim_masksize_precise">
                 <description>mask size (see <enum-ref name="masksize" />)</description>
             </param>
             <param name="inPlace" type="bool" default="false">

@@ -103,17 +103,17 @@ public:
     {
         switch(f)
         {
-        case sim_im_fmt_8UC1:
+        case simim_fmt_8UC1:
             return CV_8UC1;
-        case sim_im_fmt_8UC3:
+        case simim_fmt_8UC3:
             return CV_8UC3;
-        case sim_im_fmt_8UC4:
+        case simim_fmt_8UC4:
             return CV_8UC4;
-        case sim_im_fmt_32FC1:
+        case simim_fmt_32FC1:
             return CV_32FC1;
-        case sim_im_fmt_32FC3:
+        case simim_fmt_32FC3:
             return CV_32FC3;
-        case sim_im_fmt_32FC4:
+        case simim_fmt_32FC4:
             return CV_32FC4;
         }
         return def;
@@ -184,22 +184,22 @@ public:
         switch(img->type())
         {
         case CV_8UC1:
-            out->format = sim_im_fmt_8UC1;
+            out->format = simim_fmt_8UC1;
             break;
         case CV_8UC3:
-            out->format = sim_im_fmt_8UC3;
+            out->format = simim_fmt_8UC3;
             break;
         case CV_8UC4:
-            out->format = sim_im_fmt_8UC4;
+            out->format = simim_fmt_8UC4;
             break;
         case CV_32FC1:
-            out->format = sim_im_fmt_32FC1;
+            out->format = simim_fmt_32FC1;
             break;
         case CV_32FC3:
-            out->format = sim_im_fmt_32FC3;
+            out->format = simim_fmt_32FC3;
             break;
         case CV_32FC4:
-            out->format = sim_im_fmt_32FC4;
+            out->format = simim_fmt_32FC4;
             break;
         default:
             throw sim::exception("unhandled OpenCV format: %d", img->type());
@@ -342,15 +342,15 @@ public:
     {
         switch(i)
         {
-        case sim_im_interp_nearest:
+        case simim_interp_nearest:
             return cv::INTER_NEAREST;
-        case sim_im_interp_linear:
+        case simim_interp_linear:
             return cv::INTER_LINEAR;
-        case sim_im_interp_area:
+        case simim_interp_area:
             return cv::INTER_AREA;
-        case sim_im_interp_cubic:
+        case simim_interp_cubic:
             return cv::INTER_CUBIC;
-        case sim_im_interp_lanczos4:
+        case simim_interp_lanczos4:
             return cv::INTER_LANCZOS4;
         }
         return def;
@@ -362,7 +362,7 @@ public:
         if(in->height <= 0) throw std::runtime_error("invalid height");
         auto img = matHandles.get(in->handle);
         cv::Mat *dstImg = in->inPlace ? img : new cv::Mat();
-        int interp = parseInterp(in->interpolation, sim_im_interp_linear);
+        int interp = parseInterp(in->interpolation, simim_interp_linear);
         cv::resize(*img, *dstImg, cv::Size(in->width, in->height), 0, 0, interp);
         out->handle = matHandles.add(dstImg, in->_.scriptID);
     }
@@ -482,21 +482,21 @@ public:
     {
         switch(f)
         {
-        case sim_im_fontface_simplex:
+        case simim_fontface_simplex:
             return cv::FONT_HERSHEY_SIMPLEX;
-        case sim_im_fontface_plain:
+        case simim_fontface_plain:
             return cv::FONT_HERSHEY_PLAIN;
-        case sim_im_fontface_duplex:
+        case simim_fontface_duplex:
             return cv::FONT_HERSHEY_DUPLEX;
-        case sim_im_fontface_complex:
+        case simim_fontface_complex:
             return cv::FONT_HERSHEY_COMPLEX;
-        case sim_im_fontface_triplex:
+        case simim_fontface_triplex:
             return cv::FONT_HERSHEY_TRIPLEX;
-        case sim_im_fontface_complex_small:
+        case simim_fontface_complex_small:
             return cv::FONT_HERSHEY_COMPLEX_SMALL;
-        case sim_im_fontface_script_simplex:
+        case simim_fontface_script_simplex:
             return cv::FONT_HERSHEY_SCRIPT_SIMPLEX;
-        case sim_im_fontface_script_complex:
+        case simim_fontface_script_complex:
             return cv::FONT_HERSHEY_SCRIPT_COMPLEX;
         default:
             return def;
@@ -607,17 +607,17 @@ public:
     {
         switch(o)
         {
-        case sim_im_cmpop_eq:
+        case simim_cmpop_eq:
             return cv::CMP_EQ;
-        case sim_im_cmpop_gt:
+        case simim_cmpop_gt:
             return cv::CMP_GT;
-        case sim_im_cmpop_ge:
+        case simim_cmpop_ge:
             return cv::CMP_GE;
-        case sim_im_cmpop_lt:
+        case simim_cmpop_lt:
             return cv::CMP_LT;
-        case sim_im_cmpop_le:
+        case simim_cmpop_le:
             return cv::CMP_LE;
-        case sim_im_cmpop_ne:
+        case simim_cmpop_ne:
             return cv::CMP_NE;
         default:
             return def;
@@ -647,13 +647,13 @@ public:
     {
         switch(o)
         {
-        case sim_im_reduceop_sum:
+        case simim_reduceop_sum:
             return cv::REDUCE_SUM;
-        case sim_im_reduceop_avg:
+        case simim_reduceop_avg:
             return cv::REDUCE_AVG;
-        case sim_im_reduceop_max:
+        case simim_reduceop_max:
             return cv::REDUCE_MAX;
-        case sim_im_reduceop_min:
+        case simim_reduceop_min:
             return cv::REDUCE_MIN;
         default:
             return def;
@@ -681,11 +681,11 @@ public:
     {
         switch(o)
         {
-        case sim_im_flipop_x:
+        case simim_flipop_x:
             return 1;
-        case sim_im_flipop_y:
+        case simim_flipop_y:
             return 0;
-        case sim_im_flipop_both:
+        case simim_flipop_both:
             return -1;
         default:
             return def;
@@ -854,11 +854,11 @@ public:
     {
         switch(d)
         {
-        case sim_im_dist_L1:
+        case simim_dist_L1:
             return cv::DIST_L1;
-        case sim_im_dist_L2:
+        case simim_dist_L2:
             return cv::DIST_L2;
-        case sim_im_dist_C:
+        case simim_dist_C:
             return cv::DIST_C;
         }
         return def;
@@ -868,11 +868,11 @@ public:
     {
         switch(m)
         {
-        case sim_im_masksize_3x3:
+        case simim_masksize_3x3:
             return 3;
-        case sim_im_masksize_5x5:
+        case simim_masksize_5x5:
             return 5;
-        case sim_im_masksize_precise:
+        case simim_masksize_precise:
             return cv::DIST_MASK_PRECISE;
         }
         return def;
@@ -981,7 +981,7 @@ public:
 #else
         cv::aruco::PredefinedDictionaryType d;
 #endif
-#define ARUCO_DICT(x) case sim_im_dict##x: d = cv::aruco::DICT##x; break
+#define ARUCO_DICT(x) case simim_dict##x: d = cv::aruco::DICT##x; break
         switch(in->type)
         {
         ARUCO_DICT(_4X4_50);
@@ -1072,5 +1072,5 @@ private:
         > dictHandles{"cv.aruco.Dictionary"};
 };
 
-SIM_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)
+SIM_PLUGIN(Plugin)
 #include "stubsPlusPlus.cpp"
