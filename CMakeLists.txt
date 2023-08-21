@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.16.3)
 project(simIM)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -51,6 +51,6 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 coppeliasim_add_plugin(simIM SOURCES plugin.cpp)
-target_link_libraries(simIM Boost::boost Boost::thread)
-target_link_libraries(simIM ${OpenCV_LIBS})
-#target_link_libraries(simIM ${SIMD_LIBRARIES})
+target_link_libraries(simIM PRIVATE Boost::boost Boost::thread)
+target_link_libraries(simIM PRIVATE ${OpenCV_LIBS})
+#target_link_libraries(simIM PRIVATE ${SIMD_LIBRARIES})
