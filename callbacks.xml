@@ -54,7 +54,7 @@
             <param name="height" type="int">
                 <description>height</description>
             </param>
-            <param name="data" type="string">
+            <param name="data" type="buffer">
                 <description>image data</description>
             </param>
             <param name="format" type="int" default="simim_fmt_8UC3">
