@@ -30,7 +30,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external)
 include_directories(${OpenCV_INCLUDE_DIRS})
 #include_directories(${SIMD_INCLUDE})
 
-coppeliasim_generate_stubs(${CMAKE_CURRENT_BINARY_DIR}/generated XML_FILE ${CMAKE_CURRENT_SOURCE_DIR}/callbacks.xml LUA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/simIM.lua)
+coppeliasim_generate_stubs(${CMAKE_CURRENT_BINARY_DIR}/generated XML_FILE ${CMAKE_CURRENT_SOURCE_DIR}/sourceCode/callbacks.xml LUA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/lua/simIM.lua)
 
 include(CheckCXXSourceCompiles)
 set(CMAKE_REQUIRED_INCLUDES ${OpenCV_INCLUDE_DIRS})
@@ -48,9 +48,9 @@ else()
     set(HAVE_CV_ARROWEDLINE 0)
 endif()
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/sourceCode/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-coppeliasim_add_plugin(simIM SOURCES plugin.cpp)
+coppeliasim_add_plugin(simIM SOURCES sourceCode/plugin.cpp)
 target_link_libraries(simIM PRIVATE Boost::boost Boost::thread)
 target_link_libraries(simIM PRIVATE ${OpenCV_LIBS})
 #target_link_libraries(simIM PRIVATE ${SIMD_LIBRARIES})
