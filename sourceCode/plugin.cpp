@@ -66,9 +66,9 @@ public:
         setBuildDate(BUILD_DATE);
     }
 
-    void onScriptStateDestroyed(int scriptID)
+    void onScriptStateAboutToBeDestroyed(int scriptHandle)
     {
-        for(auto obj : matHandles.find(scriptID))
+        for(auto obj : matHandles.find(scriptHandle))
             delete matHandles.remove(obj);
     }
 
