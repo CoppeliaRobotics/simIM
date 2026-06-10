@@ -61,9 +61,6 @@ public:
     {
         if(!registerScriptStuff())
             throw std::runtime_error("failed to register script stuff");
-
-        setExtVersion("OpenCV-based Image Processing Plugin");
-        setBuildDate(BUILD_DATE);
     }
 
     void onScriptStateAboutToBeDestroyed(int scriptHandle, long long scriptUid)
